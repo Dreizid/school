@@ -4,7 +4,9 @@ import java.awt.*;
 public class CalculatorGUI extends JFrame{
 
     JPanel buttons;
+    JTextField textDisplay;
     CalculatorLogic mem;
+    Font textFont;
 
     public CalculatorGUI (){
         mem = new CalculatorLogic();
@@ -21,11 +23,23 @@ public class CalculatorGUI extends JFrame{
     }
 
     public void loadDisplay() {
+        Color displayColor = new Color(34, 33, 33);
         JPanel display = new JPanel();
         display.setPreferredSize(new Dimension(350, 150));
-        display.setLayout(new FlowLayout());
-        display.setBackground(new Color(34,33,33));
+        display.setLayout(new BorderLayout());
+        display.setBackground(displayColor);
         this.add(display, BorderLayout.NORTH);
+
+        textFont = new Font("SANS_SERIF", Font.PLAIN, 70);
+        textDisplay = new JTextField();
+        textDisplay.setPreferredSize(new Dimension(350, 75));
+        textDisplay.setBackground(displayColor);
+        textDisplay.setForeground(Color.WHITE);
+        textDisplay.setEditable(false);
+        textDisplay.setBorder(null);
+        textDisplay.setFont(textFont);
+        textDisplay.setHorizontalAlignment(SwingConstants.RIGHT);
+        display.add(textDisplay, BorderLayout.SOUTH);
 
     }
 
@@ -53,13 +67,18 @@ public class CalculatorGUI extends JFrame{
             if (currOp == "=") {
                 operationsButtonList[i].setPreferredSize(new Dimension(86, 64));
                 operationsButtonList[i].addActionListener(e -> {
-                    System.out.println(currOp); 
-                    mem.calculate();
-                    mem.clear();
+                    String result = mem.calculate();  
+                    textDisplay.setText(result);
                 });
             }
             else {
                 operationsButtonList[i].addActionListener(e -> {
+                    textDisplay.setText(textDisplay.getText() + currOp);
+                    if (mem.memory.size() == 0) {
+                        Font currentFont = textDisplay.getFont();
+                        textDisplay.setFont(currentFont.deriveFont(currentFont.getSize() - 20f));
+                        textDisplay.setText("Syntax error");
+                    }
                     mem.addToArray(currOp);
                 });
             }
@@ -88,6 +107,19 @@ public class CalculatorGUI extends JFrame{
             utilityButtonList[i].setBackground(new Color(219,220,222));
             utilityPanel.add(utilityButtonList[i]);
             String currSym = utilities[i];
+            if (currSym.equals("C")) {
+                utilityButtonList[i].addActionListener(e -> {
+                    mem.clear();
+                    textDisplay.setText("");
+                    textDisplay.setFont(textFont);
+                });
+            }
+            else if (currSym.equals("+/-")) {
+                utilityButtonList[i].addActionListener(e -> {
+                    textDisplay.setText(textDisplay.getText() + "-");
+                    mem.addToArray("neg");
+                });
+            }
             utilityButtonList[i].addActionListener(e -> {
                 System.out.println(currSym);
                 // Not sure how to use "+/-" and "%"
@@ -117,7 +149,7 @@ public class CalculatorGUI extends JFrame{
                 numbers.add(numbersButtonList[num - 1]);
                 int currNum = num;
                 numbersButtonList[num - 1].addActionListener(e -> {
-                    System.out.println(String.valueOf(currNum));
+                    textDisplay.setText(textDisplay.getText() + String.valueOf(currNum));
                     mem.addToArray(currNum);
                 });
             }
@@ -142,7 +174,7 @@ public class CalculatorGUI extends JFrame{
         cons.weighty = 2.2;
         zeroButton.setBackground(new Color(209,210,214));
         zeroButton.addActionListener(e -> {
-            System.out.println("0");
+            textDisplay.setText(textDisplay.getText() + "0");
             mem.addToArray("0");
         });
         bottom.add(zeroButton, cons);
@@ -151,7 +183,7 @@ public class CalculatorGUI extends JFrame{
         cons.weighty = 0.8;
         dotButton.setBackground(new Color(209,210,214));
         dotButton.addActionListener(e -> {
-            System.out.println(".");
+            textDisplay.setText(textDisplay.getText() + ".");;
             mem.addToArray(".");
         });
         bottom.add(dotButton, cons);

@@ -4,18 +4,12 @@ import java.util.List;
 
 public class CalculatorLogic {
     ArrayList<String> memory;
-    ArrayList<String> multipication;
-    ArrayList<String> division;
-    ArrayList<String> addandsub;
     ArrayList<String> temporary;
     ArrayList<Integer> index;
     ArrayList<String> operators;
 
     public CalculatorLogic () {
         memory = new ArrayList<>();
-        multipication = new ArrayList<>();
-        division = new ArrayList<>();
-        addandsub = new ArrayList<>();
         temporary = new ArrayList<>();
         index = new ArrayList<>();
     }
@@ -28,19 +22,24 @@ public class CalculatorLogic {
         memory.add(x);
     }
 
-    public void calculate () {
-        System.out.println("Initial: ");
-        for (String num: memory) {
-            System.out.print(num);
-        }
-        System.out.println();
+    public String calculate () {
         this.findOperators();
 
-            // Loop through the indices of the found operators
-        while (memory.contains("×") || memory.contains("÷")) {
+        mdas("×", "÷");
+        mdas("+", "-");
+
+        
+
+        return removeZero(memory.get(0));
+        
+
+    }
+
+    public void mdas(String operator1, String operator2) {
+        while (memory.contains(operator1) || memory.contains(operator2)) {
             for (int currIndex = 0; currIndex < index.size(); currIndex++) {
-                // Check if current value of index is equal to the current operator
-                if (memory.get(index.get(currIndex)) == "×"|| memory.get(index.get(currIndex)) == "÷") {
+                if (memory.get(index.get(currIndex)) == operator1 || memory.get(index.get(currIndex)) == operator2) {
+                    // Check if current value of index is equal to the current operator
                     int start;
                     int end;
                     // Case for 1 expression ex. 3x5, 2x2, 5x5
@@ -60,7 +59,7 @@ public class CalculatorLogic {
                     }
                     // Case in the middle ex. 3+3x6-9
                     else {
-                        start = index.get(currIndex - 1);
+                        start = index.get(currIndex - 1) + 1;
                         end = index.get(currIndex + 1);
                     }
                     // Copy the selected indidices
@@ -71,83 +70,27 @@ public class CalculatorLogic {
                     ArrayList<String> split = new ArrayList<>(Arrays.asList(combined.split("[×÷\\+\\-]")));
                     double result = 0;
                     if (memory.get(index.get(currIndex)).equals("×")) {
-                        result = multiply(split.get(0), split.get(1));
+                        result = multiply(replaceNeg(split.get(0)), replaceNeg(split.get(1)));
                     }
                     else if (memory.get(index.get(currIndex)).equals("÷")) {
-                        result = div(split.get(0), split.get(1));
+                        result = div(replaceNeg(split.get(0)), replaceNeg(split.get(1)));
                     }
-
+                    else if (memory.get(index.get(currIndex)).equals("+")) {
+                        result = add(replaceNeg(split.get(0)), replaceNeg(split.get(1)));
+                    }
+                    else if (memory.get(index.get(currIndex)).equals("-")) {
+                        result = subtract(replaceNeg(split.get(0)), replaceNeg(split.get(1)));
+                    }
+                    
                     for (int i = start; i < end; i++) {
                         memory.remove(start);
                     }
                     memory.add(start ,String.valueOf(result));
-                    System.out.println("Updated: ");
-                    for (String num: memory) {
-                        System.out.print(num);
-                    }
                     temporary.clear();
-                    System.out.println();
                     this.findOperators();
                 }
             }
         }
-
-        while (memory.contains("+") || memory.contains("-")) {
-            for (int currIndex = 0; currIndex < index.size(); currIndex++) {
-                // Check if current value of index is equal to the current operator
-                int start;
-                int end;
-                // Case for 1 expression ex. 3x5, 2x2, 5x5
-                if (index.size() == 1) {
-                    start = 0;
-                    end = memory.size();
-                }
-                // Case for multiple expression but operator is at the start ex. 3x5+2, 2x6-9
-                else if (currIndex == 0) {
-                    start = 0;
-                    end = index.get(currIndex + 1);
-                }
-                // Case for when the expression is at the end ex. 2+2x5, 6-8x2
-                else if (currIndex == index.size() - 1) {
-                    start = index.get(currIndex - 1) + 1;
-                    end = memory.size();
-                }
-                // Case in the middle ex. 3+3x6-9
-                else {
-                    start = index.get(currIndex - 1);
-                    end = index.get(currIndex + 1);
-                }
-                // Copy the selected indidices
-                for (int i = start; i < end; i++) {
-                    temporary.add(memory.get(i));
-                    System.out.print(memory.get(i));
-                }
-                String combined = String.join("", temporary);
-                ArrayList<String> split = new ArrayList<>(Arrays.asList(combined.split("[×÷\\+\\-]")));
-                double result = 0;
-                if (memory.get(index.get(currIndex)).equals("+")) {
-                    result = add(split.get(0), split.get(1));
-                }
-                else if (memory.get(index.get(currIndex)).equals("-")) {
-                    result = subtract(split.get(0), split.get(1));
-                }
-                
-                for (int i = start; i < end; i++) {
-                    memory.remove(start);
-                }
-                memory.add(start ,String.valueOf(result));
-                for (String num: memory) {
-                    System.out.println("Memory: ");
-                    System.out.print(num);
-                }
-                temporary.clear();
-                System.out.println();
-                this.findOperators();
-            }
-        }
-
-        
-
     }
 
     public void clear() {
@@ -167,6 +110,26 @@ public class CalculatorLogic {
         }
     }
 
+    public String removeZero(String answer) {
+        String[] wholeNumber = answer.split("\\.");
+        String decimal = wholeNumber[1];
+        int total = 0;
+        for (int i = 0; i < wholeNumber[1].length(); i++) {
+            total += Character.getNumericValue(decimal.charAt(i));
+        }
+        if (total <= 0) {
+            return String.valueOf((int)Double.parseDouble(answer));
+        } 
+        return answer;
+    }
+
+    public String replaceNeg(String x) {
+        if (x.contains("neg")) {
+            x = x.replace("neg", "-");
+        }
+        return x;
+    }
+
 
     public double multiply(String x, String y) {
         double result = Double.parseDouble(x) * Double.parseDouble(y);
@@ -184,7 +147,6 @@ public class CalculatorLogic {
     }
 
     public double subtract(String x, String y) { 
-        System.out.println("x: " + x + "y: " + y);
         double result = Double.parseDouble(x) - Double.parseDouble(y);
         return result;
     }
