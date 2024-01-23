@@ -1,0 +1,1 @@
+# Intermidete programming activities
