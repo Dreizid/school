@@ -24,7 +24,7 @@ public class CalculatorGUI extends JFrame{
         JPanel display = new JPanel();
         display.setPreferredSize(new Dimension(350, 150));
         display.setLayout(new FlowLayout());
-        display.setBackground(Color.BLACK);
+        display.setBackground(new Color(34,33,33));
         this.add(display, BorderLayout.NORTH);
 
     }
@@ -32,23 +32,30 @@ public class CalculatorGUI extends JFrame{
     public void loadOperations() {
         // Panel
         JPanel operationsPanel = new JPanel();
-        operationsPanel.setPreferredSize(new Dimension(88, 350));
-        operationsPanel.setLayout(new GridLayout(5, 1));
+        operationsPanel.setPreferredSize(new Dimension(85, 320));
+        operationsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         operationsPanel.setBackground(Color.ORANGE);
         this.add(operationsPanel, BorderLayout.EAST);
 
         // Buttons
-        String[] operations = {"÷", "x", "+", "-", "="}; // The buttons to be placed
+        String[] operations = {"÷", "×", "+", "-", "="}; // The buttons to be placed
         int NUMBEROFBUTTONS = operations.length;
         JButton[] operationsButtonList = new JButton[NUMBEROFBUTTONS];
         for (int i = 0; i < NUMBEROFBUTTONS; i++) {
             operationsButtonList[i] = new JButton(operations[i]);
+            operationsButtonList[i].setPreferredSize(new Dimension(86, 62));
+            operationsButtonList[i].setBackground(new Color(248,134,20));
+            operationsButtonList[i].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.darkGray));
+            operationsButtonList[i].setForeground(Color.WHITE);
+            operationsButtonList[i].setFont(new Font("Arial", Font.PLAIN, 20));
             operationsPanel.add(operationsButtonList[i]);
             String currOp = operations[i];
             if (currOp == "=") {
+                operationsButtonList[i].setPreferredSize(new Dimension(86, 64));
                 operationsButtonList[i].addActionListener(e -> {
                     System.out.println(currOp); 
                     mem.calculate();
+                    mem.clear();
                 });
             }
             else {
@@ -78,6 +85,7 @@ public class CalculatorGUI extends JFrame{
         JButton[] utilityButtonList = new JButton[NUMBEROFUTILITY];
         for (int i = 0; i < NUMBEROFUTILITY; i++) {
             utilityButtonList[i] = new JButton(utilities[i]);
+            utilityButtonList[i].setBackground(new Color(219,220,222));
             utilityPanel.add(utilityButtonList[i]);
             String currSym = utilities[i];
             utilityButtonList[i].addActionListener(e -> {
@@ -105,6 +113,7 @@ public class CalculatorGUI extends JFrame{
             addNum -= 3;
             for (int num = addNum; num < addNum + 3; num++) {
                 numbersButtonList[num - 1] = new JButton(String.valueOf(num));
+                numbersButtonList[num - 1].setBackground(new Color(209,210,214));
                 numbers.add(numbersButtonList[num - 1]);
                 int currNum = num;
                 numbersButtonList[num - 1].addActionListener(e -> {
@@ -129,12 +138,22 @@ public class CalculatorGUI extends JFrame{
 
         // Buttons
         JButton zeroButton = new JButton("0");
-        cons.weightx = 2.2;
+        cons.weightx = 2.19;
         cons.weighty = 2.2;
+        zeroButton.setBackground(new Color(209,210,214));
+        zeroButton.addActionListener(e -> {
+            System.out.println("0");
+            mem.addToArray("0");
+        });
         bottom.add(zeroButton, cons);
         JButton dotButton = new JButton(".");
-        cons.weightx = 0.8;
+        cons.weightx = 0.81;
         cons.weighty = 0.8;
+        dotButton.setBackground(new Color(209,210,214));
+        dotButton.addActionListener(e -> {
+            System.out.println(".");
+            mem.addToArray(".");
+        });
         bottom.add(dotButton, cons);
 
 
