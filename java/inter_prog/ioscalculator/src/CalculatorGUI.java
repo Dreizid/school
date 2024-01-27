@@ -1,5 +1,6 @@
 import javax.swing.*;   
 import java.awt.*;
+import java.text.DecimalFormat;
 
 public class CalculatorGUI extends JFrame{
 
@@ -7,9 +8,16 @@ public class CalculatorGUI extends JFrame{
     JTextField textDisplay;
     CalculatorLogic mem;
     Font textFont;
+    String currText;
+    String tempText;
+    int numCount;
+    boolean DOT_ON = false;
+    boolean CAN_OPERATE = false;
 
     public CalculatorGUI (){
         mem = new CalculatorLogic();
+        tempText = "";
+        currText = "";
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -52,7 +60,7 @@ public class CalculatorGUI extends JFrame{
         this.add(operationsPanel, BorderLayout.EAST);
 
         // Buttons
-        String[] operations = {"÷", "×", "+", "-", "="}; // The buttons to be placed
+        String[] operations = {"÷", "×", "+", "-", "="}; 
         int NUMBEROFBUTTONS = operations.length;
         JButton[] operationsButtonList = new JButton[NUMBEROFBUTTONS];
         for (int i = 0; i < NUMBEROFBUTTONS; i++) {
@@ -68,23 +76,25 @@ public class CalculatorGUI extends JFrame{
                 operationsButtonList[i].setPreferredSize(new Dimension(86, 64));
                 operationsButtonList[i].addActionListener(e -> {
                     String result = mem.calculate();  
-                    textDisplay.setText(result);
+                    DOT_ON = false;
+                    textDisplay.setText(handleDigitInput(result));
                 });
             }
             else {
                 operationsButtonList[i].addActionListener(e -> {
-                    textDisplay.setText(textDisplay.getText() + currOp);
-                    if (mem.memory.size() == 0) {
-                        Font currentFont = textDisplay.getFont();
-                        textDisplay.setFont(currentFont.deriveFont(currentFont.getSize() - 20f));
-                        textDisplay.setText("Syntax error");
+                    if (CAN_OPERATE == true) {
+                        textDisplay.setText(textDisplay.getText() + currOp);
+                        currText = textDisplay.getText();
+                        tempText = "";
+                        DOT_ON = false;
+                        CAN_OPERATE = false;
+                        numCount = 0;
+                        mem.addToArray(currOp);
                     }
-                    mem.addToArray(currOp);
                 });
             }
         }
 
-        // Initialize buttons panel
         buttons = new JPanel();
         buttons.setLayout(new BorderLayout());
         this.add(buttons, BorderLayout.WEST);
@@ -110,22 +120,24 @@ public class CalculatorGUI extends JFrame{
             if (currSym.equals("C")) {
                 utilityButtonList[i].addActionListener(e -> {
                     mem.clear();
+                    tempText = "";
+                    currText = "";
+                    DOT_ON = false;
+                    CAN_OPERATE = false;
                     textDisplay.setText("");
                     textDisplay.setFont(textFont);
+                    
                 });
             }
             else if (currSym.equals("+/-")) {
                 utilityButtonList[i].addActionListener(e -> {
-                    textDisplay.setText(textDisplay.getText() + "-");
+                    currText += "-";
+                    textDisplay.setText("-" + textDisplay.getText());
                     mem.addToArray("neg");
                 });
             }
             utilityButtonList[i].addActionListener(e -> {
                 System.out.println(currSym);
-                // Not sure how to use "+/-" and "%"
-                // if (currSym != "+/-" && currSym != "C") {
-                //     mem.addToArray(currSym);
-                // } 
             });
         }
 
@@ -149,8 +161,11 @@ public class CalculatorGUI extends JFrame{
                 numbers.add(numbersButtonList[num - 1]);
                 int currNum = num;
                 numbersButtonList[num - 1].addActionListener(e -> {
-                    textDisplay.setText(textDisplay.getText() + String.valueOf(currNum));
+                    tempText += String.valueOf(currNum);
+                    textDisplay.setText(currText + handleDigitInput(tempText));
                     mem.addToArray(currNum);
+                    CAN_OPERATE = true;
+                    numCount++;
                 });
             }
             
@@ -164,17 +179,17 @@ public class CalculatorGUI extends JFrame{
         bottom.setBackground(Color.BLACK);
         buttons.add(bottom, BorderLayout.SOUTH);
 
-        // GridBag
         GridBagConstraints cons = new GridBagConstraints();
         cons.fill = GridBagConstraints.BOTH;
 
-        // Buttons
         JButton zeroButton = new JButton("0");
         cons.weightx = 2.19;
         cons.weighty = 2.2;
         zeroButton.setBackground(new Color(209,210,214));
         zeroButton.addActionListener(e -> {
-            textDisplay.setText(textDisplay.getText() + "0");
+            tempText += String.valueOf("0");
+            textDisplay.setText(currText + handleDigitInput(tempText));
+            numCount++;
             mem.addToArray("0");
         });
         bottom.add(zeroButton, cons);
@@ -183,12 +198,25 @@ public class CalculatorGUI extends JFrame{
         cons.weighty = 0.8;
         dotButton.setBackground(new Color(209,210,214));
         dotButton.addActionListener(e -> {
-            textDisplay.setText(textDisplay.getText() + ".");;
-            mem.addToArray(".");
+            if (DOT_ON == false && mem.memory.size() != 0 && numCount > 0) {
+                DOT_ON = true;
+                tempText += String.valueOf(".");
+                textDisplay.setText(currText + handleDigitInput(tempText));
+                mem.addToArray(".");
+            }
         });
         bottom.add(dotButton, cons);
 
 
+    }
+
+    private String handleDigitInput(String number) {
+        if (number.contains(",")) {
+            number = number.replace(",", "");
+        }
+        double numericValue = Double.parseDouble(number);
+        DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
+        return decimalFormat.format(numericValue);
     }
 
     public static void main(String[] args) {

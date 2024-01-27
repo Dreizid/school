@@ -39,30 +39,24 @@ public class CalculatorLogic {
         while (memory.contains(operator1) || memory.contains(operator2)) {
             for (int currIndex = 0; currIndex < index.size(); currIndex++) {
                 if (memory.get(index.get(currIndex)) == operator1 || memory.get(index.get(currIndex)) == operator2) {
-                    // Check if current value of index is equal to the current operator
                     int start;
                     int end;
-                    // Case for 1 expression ex. 3x5, 2x2, 5x5
                     if (index.size() == 1) {
                         start = 0;
                         end = memory.size();
                     }
-                    // Case for multiple expression but operator is at the start ex. 3x5+2, 2x6-9
                     else if (currIndex == 0) {
                         start = 0;
                         end = index.get(currIndex + 1);
                     }
-                    // Case for when the expression is at the end ex. 2+2x5, 6-8x2
                     else if (currIndex == index.size() - 1) {
                         start = index.get(currIndex - 1) + 1;
                         end = memory.size();
                     }
-                    // Case in the middle ex. 3+3x6-9
                     else {
                         start = index.get(currIndex - 1) + 1;
                         end = index.get(currIndex + 1);
                     }
-                    // Copy the selected indidices
                     for (int i = start; i < end; i++) {
                         temporary.add(memory.get(i));
                     }
@@ -125,7 +119,8 @@ public class CalculatorLogic {
 
     public String replaceNeg(String x) {
         if (x.contains("neg")) {
-            x = x.replace("neg", "-");
+            x = x.replace("neg", "");
+            x = String.valueOf(Double.parseDouble(x) - (Double.parseDouble(x) * 2));
         }
         return x;
     }
