@@ -24,15 +24,10 @@ public class CalculatorLogic {
 
     public String calculate () {
         this.findOperators();
-
         mdas("×", "÷");
         mdas("+", "-");
 
-        
-
         return removeZero(memory.get(0));
-        
-
     }
 
     public void mdas(String operator1, String operator2) {
