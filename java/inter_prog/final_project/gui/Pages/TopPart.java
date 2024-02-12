@@ -1,41 +1,43 @@
+package Pages;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class TopPart extends JFrame {
-    JPanel mainPanel;
+public class TopPart extends JPanel {
+    JPanel topPanel;
     JTextField searchField;
     public TopPart() {
-        mainPanel = new JPanel();
-        JLabel emptyLabel = new JLabel(" ");
-        emptyLabel.setFont(new Font("Arial" , Font.PLAIN, 100));
-        mainPanel.setLayout(new FlowLayout());
-        mainPanel.add(emptyLabel);
-        mainPanel.setBackground(new Color(224, 227, 213));
-        setLayout(new BorderLayout());
-        add(mainPanel, BorderLayout.NORTH);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        initializeTopPanel();
         initialize();
-    }    
+        setVisible(true);
+    } 
+    
+    public void initializeTopPanel() {
+        topPanel = new JPanel();
+        JLabel emptyLabel = new JLabel(" ");
+        emptyLabel.setPreferredSize(new Dimension(0, 100));
+        setLayout(new FlowLayout());
+        add(emptyLabel);
+        setBackground(new Color(224, 227, 213));
+    }
 
     public void initialize() {
         String TEXT_FIELD_TEXT = "Search";
-        ImageIcon logo = new ImageIcon("gui\\logo.png");
+        ImageIcon logo = new ImageIcon("gui\\resources\\logo.png");
         JLabel logoLabel = new JLabel(logo);
-        mainPanel.add(logoLabel);
+        add(logoLabel);
 
         JButton homeButton = new JButton("Home");
         homeButton.addActionListener(e -> {
         });
-        mainPanel.add(homeButton);
+        add(homeButton);
 
         JButton shopButton = new JButton("Shop");
-        mainPanel.add(shopButton);
+        add(shopButton);
 
         JButton contactButton = new JButton("Contact");
-        mainPanel.add(contactButton);
+        add(contactButton);
 
         searchField = new JTextField(TEXT_FIELD_TEXT, 20);
         searchField.setForeground(Color.GRAY);
@@ -60,9 +62,13 @@ public class TopPart extends JFrame {
                 }
             }
         });
-        mainPanel.add(searchField);
+        add(searchField);
 
         JButton searchButton = new JButton();
 
+    }
+
+    public static void main(String[] args) {
+        TopPart topPart = new TopPart();
     }
 }

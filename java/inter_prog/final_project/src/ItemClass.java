@@ -25,4 +25,12 @@ public class ItemClass {
     public void setQuantity (int quantity) {
         this.quantity = quantity;
     }
+
+    /*
+     * TO DO:
+     * extend JPanel
+     * make loadShopItem
+     * make loadCartItem
+     * make loadCheckoutItem
+     */
 }

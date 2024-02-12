@@ -1,18 +1,19 @@
+package Pages;
 import javax.swing.*;
 import java.awt.*;
 
-public class HomePage extends TopPart{
+public class HomePage extends JPanel{
     JPanel mainPanel;
     JPanel bottomPanel;
     JPanel categoriesLabelPanel;
     JPanel categoriesPanel;
     public HomePage() {
-        super();
-        setSize(1058, 500);
-
+        setSize(1048, 500);
+        setLayout(new BorderLayout());
+        initializeHomePage();
     }
 
-    public void initilizeHomePage() {
+    public void initializeHomePage() {
         initializePanels();
         initializeBackground();
         initializeCategoryPart();
@@ -31,13 +32,12 @@ public class HomePage extends TopPart{
         categoriesPanel.setLayout(new GridLayout(0, 3));
         bottomPanel.add(categoriesPanel, BorderLayout.CENTER);
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(mainPanel);
-        add(scrollPane, BorderLayout.CENTER);
+        setBorder(BorderFactory.createEmptyBorder());
+        add(mainPanel, BorderLayout.CENTER);
     }
 
     private void initializeBackground() {
-        JLabel backgroundImage = new JLabel(new ImageIcon("gui\\home_background.png"));
+        JLabel backgroundImage = new JLabel(new ImageIcon("gui\\resources\\home_background.png"));
         mainPanel.add(backgroundImage, BorderLayout.CENTER);
     }
 
@@ -60,7 +60,7 @@ public class HomePage extends TopPart{
 
     public static void main(String[] args) {
         HomePage homePage = new HomePage();
-        homePage.initilizeHomePage();
+        homePage.initializeHomePage();
         homePage.setVisible(true);
     }
 }

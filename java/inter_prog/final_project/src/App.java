@@ -15,27 +15,19 @@ public class App {
         person1.cart.addToCart(new MeatItem("Chicken", "Chickey", "null", "1 whole", 127.30));
         person1.cart.addToCart(new MeatItem("Chicken", "Chickey", "null", "1 whole", 127.30));
         person1.cart.addToCart(new MeatItem("Chicken", "Chickey", "null", "1 whole", 127.30));
-
-        check = person1.cart.meatCart.get(person1.cart.findIndexOf(chicken)).quantity;
-        System.out.println("Third add: " + check);
+        System.out.println("Person 1 Initial: ");
         for (MeatItem item: person1.cart.meatCart) {
             System.out.println("Item name: " + item.itemName + " Quantity: " + item.quantity);
         }
-
-        PersonClass person2 = new PersonClass("Hart", "hart@gmail.com", "345", "3456");
-        person2.cart.addToCart(new MeatItem("Chicken", "Chickey", "null", "1 whole", 127.30));
-        for (MeatItem item: person2.cart.meatCart) {
-            System.out.println("Item name: " + item.itemName + " Quantity: " + item.quantity);
-        }
-
+        System.out.println("Person 1: ");
         person1.cart.subtractFromCart(new MeatItem("Chicken", "Chickey", "null", "1 whole", 127.30));
         for (MeatItem item: person1.cart.meatCart) {
-            System.out.println("Person 1: " + "Item name: " + item.itemName + " Quantity: " + item.quantity);
+            System.out.println("Item name: " + item.itemName + " Quantity: " + item.quantity);
         }
+        System.out.println("Person 1 Updated: ");
         person1.cart.setItemQuantity(new MeatItem("Beef", "Beefy", "null", "1kg", 155.50), 10);
         for (MeatItem item: person1.cart.meatCart) {
-            System.out.println("Person 1: " + "Item name: " + item.itemName + " Quantity: " + item.quantity);
+            System.out.println("Item name: " + item.itemName + " Quantity: " + item.quantity);
         }
-
     }
 }
