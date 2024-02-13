@@ -6,7 +6,7 @@ import gui.widgets.*;
 
 public class ItemGui extends RoundedCornerPanel{
     Color backgroundColor = new Color(214, 224, 234);
-    private int size = 180;
+    private int size = 200;
     public ItemGui(MeatItem item) {
         super(30);
         setLayout(new BorderLayout());
@@ -62,14 +62,14 @@ public class ItemGui extends RoundedCornerPanel{
         imagePanel.add(image);
         add(imagePanel, BorderLayout.NORTH);
         JPanel informationPanel = new JPanel();
-        informationPanel.setLayout(new GridLayout(2, 2));
+        informationPanel.setLayout(new GridLayout(3, 0));
         informationPanel.setBorder(BorderFactory.createEmptyBorder(0, PADDING, 0, PADDING));
         JLabel productName = new JLabel(itemName);
         JLabel productPrice = new JLabel(priceLayout);
         JLabel productUnit = new JLabel(unit);
         informationPanel.add(productName);
-        informationPanel.add(productPrice);
         informationPanel.add(productUnit);
+        informationPanel.add(productPrice);
         informationPanel.setBackground(backgroundColor);
         add(informationPanel, BorderLayout.CENTER);
 

@@ -33,7 +33,7 @@ public class HomePage extends JPanel{
         bottomPanel.add(categoriesPanel, BorderLayout.CENTER);
 
         setBorder(BorderFactory.createEmptyBorder());
-        add(mainPanel, BorderLayout.CENTER);
+        add(new JScrollPane(mainPanel), BorderLayout.CENTER);
     }
 
     private void initializeBackground() {

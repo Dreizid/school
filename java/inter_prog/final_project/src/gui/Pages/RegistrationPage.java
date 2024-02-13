@@ -8,14 +8,12 @@ import com.formdev.flatlaf.json.ParseException;
 import gui.widgets.RoundJButton;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class RegistrationPage extends JFrame{
-    ArrayList<JTextField> userEntries;
     
     public RegistrationPage() {
-        userEntries = new ArrayList<JTextField>();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setSize(1048, 550);
         setLayout(new BorderLayout());
         initializeRight();

@@ -10,6 +10,7 @@ public class TopPart extends JPanel {
     JPanel topPanel;
     JTextField searchField;
     String currentPage;
+    Color backgroundColor = new Color(224, 227, 213);
     public TopPart(CardLayout card, JPanel panel) {
         cardLayout = card;
         parentPanel = panel;
@@ -25,7 +26,7 @@ public class TopPart extends JPanel {
         emptyLabel.setPreferredSize(new Dimension(0, 100));
         setLayout(new FlowLayout());
         add(emptyLabel);
-        setBackground(new Color(224, 227, 213));
+        setBackground(backgroundColor);
     }
 
     public void initialize() {
@@ -35,6 +36,9 @@ public class TopPart extends JPanel {
         add(logoLabel);
 
         JButton homeButton = new JButton("Home");
+        homeButton.setBackground(backgroundColor);
+        homeButton.setBorder(null);
+        homeButton.setFocusPainted(false);
         homeButton.addActionListener(e -> {
             cardLayout.show(parentPanel, "homePage");
         });
@@ -54,7 +58,7 @@ public class TopPart extends JPanel {
         });
         add(contactButton);
 
-        searchField = new JTextField(TEXT_FIELD_TEXT, 20);
+        searchField = new JTextField(TEXT_FIELD_TEXT, 10);
         searchField.setForeground(Color.GRAY);
         searchField.addFocusListener(new FocusAdapter() {
             @Override

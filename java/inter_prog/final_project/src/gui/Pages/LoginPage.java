@@ -1,11 +1,17 @@
 package gui.Pages;
 import javax.swing.*;
 
+import core.PersonClass;
+import gui.MainGui;
 import gui.widgets.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
+import java.util.Arrays;
 public class LoginPage extends JFrame{
     private int WIDTH = 1200;
     private int HEIGHT = 800;
+    RoundJTextField usernameField;
+    RoundJPasswordField passwordField;
     JPanel loginPanel;
     JLabel background;
 
@@ -55,8 +61,8 @@ public class LoginPage extends JFrame{
 
     public void initializeTextField() {
         Font fieldFont = new Font("Open Sans MS", Font.PLAIN, 35);
-        RoundJTextField usernameField = new RoundJTextField(20, 45);
-        RoundJTextField passwordField = new RoundJTextField(20, 45);
+        usernameField = new RoundJTextField(20, 45);
+        passwordField = new RoundJPasswordField(20, 45);
         usernameField.setFont(fieldFont);
         usernameField.setBounds(35, 180, 347, 50); // okay na
         usernameField.setBackground(Color.LIGHT_GRAY);
@@ -90,7 +96,12 @@ public class LoginPage extends JFrame{
         loginPanel.add(rememberBox);
         RoundJButton signInButton = new RoundJButton("Log in", 50, LOG_IN_BUTTON_COLOR);
         signInButton.addActionListener(e -> {
-            
+            if (isAdmin()) {
+
+            } else if (authenticate()) {
+                setVisible(false);
+                MainGui main = new MainGui();
+            }
         });
         signInButton.setBounds(90, 370, 226, 70); // okay
         signInButton.setFont(new Font("Open Sans MS", Font.PLAIN, 30));
@@ -104,9 +115,31 @@ public class LoginPage extends JFrame{
         signUpButton.setBackground(Color.WHITE);
     }
 
-    public String[] loginEvent () {
-        String[] temp = new String[1];
-        return temp;
+    private boolean authenticate() {
+        char[] enteredPassword = passwordField.getPassword();
+        String enteredPasswordString = new String(enteredPassword);
+        if (usernameField.getText().equals("Rei") && enteredPasswordString.equals("123")) {
+            Arrays.fill(enteredPassword, ' ');
+            return true;
+        }
+        Arrays.fill(enteredPassword, ' ');
+        return false;
+    }
+
+    private boolean isAdmin() {
+        char[] enteredPassword = passwordField.getPassword();
+        String enteredPasswordString = new String(enteredPassword);
+        if (usernameField.getText().equals("admin") && enteredPasswordString.equals("admin123")) {
+            Arrays.fill(enteredPassword, ' ');
+            return true;
+        }
+        Arrays.fill(enteredPassword, ' ');
+        return false;
+    }
+
+    public PersonClass loginEvent() {
+        PersonClass person = new PersonClass("Rei", "First Name A. Last", "example@gmail.com", "123", "+63 012-345-6789");
+        return person;
     }
 
 
