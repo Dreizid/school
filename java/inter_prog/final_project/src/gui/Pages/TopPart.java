@@ -5,9 +5,15 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 public class TopPart extends JPanel {
+    CardLayout cardLayout;
+    JPanel parentPanel;
     JPanel topPanel;
     JTextField searchField;
-    public TopPart() {
+    String currentPage;
+    public TopPart(CardLayout card, JPanel panel) {
+        cardLayout = card;
+        parentPanel = panel;
+        currentPage = "home";
         initializeTopPanel();
         initialize();
         setVisible(true);
@@ -24,19 +30,28 @@ public class TopPart extends JPanel {
 
     public void initialize() {
         String TEXT_FIELD_TEXT = "Search";
-        ImageIcon logo = new ImageIcon("gui\\resources\\logo.png");
+        ImageIcon logo = new ImageIcon("src\\gui\\static\\images\\logo.png");
         JLabel logoLabel = new JLabel(logo);
         add(logoLabel);
 
         JButton homeButton = new JButton("Home");
         homeButton.addActionListener(e -> {
+            cardLayout.show(parentPanel, "homePage");
         });
         add(homeButton);
 
-        JButton shopButton = new JButton("Shop");
-        add(shopButton);
+        JButton storeButton = new JButton("Shop");
+        storeButton.addActionListener(e -> {
+            cardLayout.show(parentPanel, "storePage");
+
+        });
+        add(storeButton);
 
         JButton contactButton = new JButton("Contact");
+        contactButton.addActionListener(e -> {
+            cardLayout.show(parentPanel, "contactPage");
+
+        });
         add(contactButton);
 
         searchField = new JTextField(TEXT_FIELD_TEXT, 20);
@@ -66,9 +81,5 @@ public class TopPart extends JPanel {
 
         JButton searchButton = new JButton();
 
-    }
-
-    public static void main(String[] args) {
-        TopPart topPart = new TopPart();
     }
 }

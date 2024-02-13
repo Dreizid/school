@@ -37,7 +37,7 @@ public class HomePage extends JPanel{
     }
 
     private void initializeBackground() {
-        JLabel backgroundImage = new JLabel(new ImageIcon("gui\\resources\\home_background.png"));
+        JLabel backgroundImage = new JLabel(new ImageIcon("src\\gui\\static\\images\\home_background.png"));
         mainPanel.add(backgroundImage, BorderLayout.CENTER);
     }
 
@@ -46,15 +46,15 @@ public class HomePage extends JPanel{
         categoriesLabelPanel.add(categoriesLabel);
 
         // Fruits & Vegetables
-        JButton fruitvegetableButton = new JButton();
+        JButton fruitvegetableButton = new JButton("Fruit's & Vegetable");
         categoriesPanel.add(fruitvegetableButton);
 
         // Meat 
-        JButton meatButton = new JButton();
+        JButton meatButton = new JButton("Meat");
         categoriesPanel.add(meatButton);
 
         // Fish
-        JButton fishButton = new JButton();
+        JButton fishButton = new JButton("Fish");
         categoriesPanel.add(fishButton);
     }
 

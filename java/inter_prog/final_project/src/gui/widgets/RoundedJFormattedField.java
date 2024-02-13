@@ -1,20 +1,19 @@
 package gui.widgets;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
-import javax.swing.JButton;
 
+import javax.swing.JFormattedTextField;
 
-public class RoundJButton extends JButton {
+public class RoundedJFormattedField extends JFormattedTextField{
     private Shape shape;
     private int arch;
-    private Color borderColor;
-    public RoundJButton(String name, int arch, Color bordercolor) {
-        super(name); 
-        this.borderColor = bordercolor;
-        this.arch = arch;       
-        setOpaque(false);
+    public RoundedJFormattedField(int size, int arch) {
+        super(size);
+        this.arch = arch;
+        setOpaque(false); 
     }
     protected void paintComponent(Graphics g) {
         g.setColor(getBackground());
@@ -22,7 +21,7 @@ public class RoundJButton extends JButton {
         super.paintComponent(g);
     }
     protected void paintBorder(Graphics g) {
-        g.setColor(borderColor);
+        g.setColor(Color.WHITE);
         g.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, arch, arch);
     }
     public boolean contains(int x, int y) {
@@ -31,6 +30,4 @@ public class RoundJButton extends JButton {
         }
         return shape.contains(x, y);
     }
-
 }
-

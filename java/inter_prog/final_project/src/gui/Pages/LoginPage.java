@@ -2,9 +2,7 @@ package gui.Pages;
 import javax.swing.*;
 
 import gui.widgets.*;
-
 import java.awt.*;
-
 public class LoginPage extends JFrame{
     private int WIDTH = 1200;
     private int HEIGHT = 800;
@@ -44,10 +42,10 @@ public class LoginPage extends JFrame{
     }
 
     public void initializeText() {
-        Font signInLabelFont = new Font("Arial", Font.BOLD, 60);
+        Font signInLabelFont = new Font("Open Sans MS", Font.BOLD, 60);
         loginPanel = new RoundedCornerPanel(20);
         loginPanel.setLayout(null);
-        loginPanel.setBackground(Color.RED);
+        loginPanel.setBackground(Color.WHITE);
         JLabel signInLabel = new JLabel("SIGN IN"); 
         signInLabel.setFont(signInLabelFont);
         signInLabel.setBounds(90, 25, 226, 100);
@@ -56,39 +54,54 @@ public class LoginPage extends JFrame{
     }
 
     public void initializeTextField() {
-        Font fieldFont = new Font("Arial", Font.PLAIN, 35);
+        Font fieldFont = new Font("Open Sans MS", Font.PLAIN, 35);
         RoundJTextField usernameField = new RoundJTextField(20, 45);
         RoundJTextField passwordField = new RoundJTextField(20, 45);
         usernameField.setFont(fieldFont);
-        usernameField.setBounds(40, 40, 226, 40); // Papalitan; 1st is x 2nd is y
+        usernameField.setBounds(35, 180, 347, 50); // okay na
+        usernameField.setBackground(Color.LIGHT_GRAY);
         passwordField.setFont(fieldFont);
-        passwordField.setBounds(40, 100, 226, 40); // Papalitan; 1st is x 2nd is y
+        passwordField.setBounds(35, 270, 347, 50); // okay na
+        passwordField.setBackground(Color.LIGHT_GRAY);
         loginPanel.add(usernameField);
         loginPanel.add(passwordField);
     }
 
     public void initializeTextFieldLabel() {
-        Font labelFont = new Font("Arial", Font.PLAIN, 35); // Papalitan
+        Font labelFont = new Font("Open Sans MS",Font.PLAIN, 17); // okay na
         JLabel usernameLabel = new JLabel("Username");
+        usernameLabel.setFont(new Font("Open Sans MS", Font.PLAIN, 10));
         JLabel passwordLabel = new JLabel("Password");
+        passwordLabel.setFont(new Font("Open Sans MS", Font.PLAIN, 20));
         usernameLabel.setFont(labelFont);
-        usernameLabel.setBounds(40, 200, 226, 40); // Papalitan;
+        usernameLabel.setBounds(40, 140, 226, 40); // okay na
         loginPanel.add(usernameLabel);
         passwordLabel.setFont(labelFont);
-        passwordLabel.setBounds(40, 300, 226, 40); // Papalitan;
+        passwordLabel.setBounds(40, 230, 226, 40); // okay na
         loginPanel.add(passwordLabel);
     }
 
     public void initializeButtons() {
+        Color LOG_IN_BUTTON_COLOR = new Color(193, 225, 193);
         JCheckBox rememberBox = new JCheckBox("Remember me?");
-        rememberBox.setBounds(40, 500, 226, 40); // Papalitan;
+        rememberBox.setFont(new Font("Open Sans MS", Font.PLAIN, 17));
+        rememberBox.setBounds(40, 320, 226, 40); // okay
+        rememberBox.setBackground(Color.WHITE);
         loginPanel.add(rememberBox);
-        RoundJButton signInButton = new RoundJButton("Sign in");
-        signInButton.setBounds(40, 400, 226, 40); // Papalitan;
+        RoundJButton signInButton = new RoundJButton("Log in", 50, LOG_IN_BUTTON_COLOR);
+        signInButton.addActionListener(e -> {
+            
+        });
+        signInButton.setBounds(90, 370, 226, 70); // okay
+        signInButton.setFont(new Font("Open Sans MS", Font.PLAIN, 30));
+        signInButton.setBorderPainted(false);
+        signInButton.setBackground(LOG_IN_BUTTON_COLOR); 
         loginPanel.add(signInButton);
         JButton signUpButton = new JButton("Sign up");
-        signUpButton.setBounds(40, 350, 226, 40); // Papalitan;
+        signUpButton.setBounds(160, 500, 90, 50); // okay
+        signUpButton.setBorderPainted(false);
         loginPanel.add(signUpButton);
+        signUpButton.setBackground(Color.WHITE);
     }
 
     public String[] loginEvent () {

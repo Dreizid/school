@@ -1,6 +1,6 @@
 package gui.Pages;
 import javax.swing.*;
 
-public class ContactPage extends JFrame{
+public class ContactPage extends JPanel{
     
 }

@@ -1,6 +1,6 @@
 package gui.Pages;
 import javax.swing.*;
 
-public class CartPage extends JFrame{
+public class CartPage extends JPanel{
     
 }

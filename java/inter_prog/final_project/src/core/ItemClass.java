@@ -1,11 +1,11 @@
 package core;
 public class ItemClass {
-    String itemName;
-    String description;
-    String imagePath;
-    String unit;
-    double price;
-    int quantity;
+    public String itemName;
+    public String description;
+    public String imagePath;
+    public String unit;
+    public double price;
+    public int quantity;
     public ItemClass (String itemName, String description, String imagePath, String unit, double price) {
         this.itemName = itemName;
         this.description = description;
