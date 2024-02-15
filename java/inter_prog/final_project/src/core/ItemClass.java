@@ -1,30 +1,42 @@
 package core;
 public class ItemClass {
-    public String itemName;
-    public String description;
-    public String imagePath;
-    public String unit;
-    public double price;
-    public int quantity;
-    public ItemClass (String itemName, String description, String imagePath, String unit, double price) {
+    private String itemName;
+    private String category;
+    private String description;
+    private String imagePath;
+    private String unit;
+    private double price;
+    public ItemClass (String itemName, String category, String description, String imagePath, String unit, double price) {
         this.itemName = itemName;
+        this.category = category;
         this.description = description;
         this.price = price;
         this.unit = unit;
-        this.quantity = 1;
         this.imagePath = imagePath;
     }
 
-    public void addQuantity () {
-        quantity++;
+    public String getName() {
+        return this.itemName;
     }
 
-    public void subtractQuantity () {
-        quantity--;
+    public String getCategory() {
+        return this.category;
     }
 
-    public void setQuantity (int quantity) {
-        this.quantity = quantity;
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getImagePath() {
+        return this.imagePath;
+    }
+
+    public String getUnit() {
+        return this.unit;
+    }
+
+    public double getPrice() {
+        return this.price;
     }
 
     /*
