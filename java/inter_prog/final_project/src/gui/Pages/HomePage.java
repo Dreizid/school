@@ -3,59 +3,89 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HomePage extends JPanel{
-    JPanel mainPanel;
-    JPanel bottomPanel;
-    JPanel categoriesLabelPanel;
-    JPanel categoriesPanel;
-    public HomePage() {
+    private static HomePage instance;
+
+    private static ImageIcon BACKGROUND_IMAGE;
+
+    private JPanel mainPanel;
+    private JPanel bottomPanel;
+    private JPanel categoriesLabelPanel;
+    private JPanel categoriesPanel;
+
+    private JButton fruitvegetableButton;
+    private JButton meatButton;
+    private JButton fishButton;
+
+    private JLabel backgroundPanel;
+
+    private HomePage() {
+        /*
+         * TO DO:
+         * Add text to the background image
+         * - Blur the background?
+         * - Add a panel behind text?
+         * 
+         * Remove button backgrounds
+         * Add ImageIcons to the buttons
+         * 
+         * Make methods to retrive the buttons
+         */
         setSize(1048, 500);
         setLayout(new BorderLayout());
-        initializeHomePage();
+        initComponents();
+        setLayout();
+    }
+
+    public static HomePage getInstance() {
+        if (instance == null) {
+            instance = new HomePage();
+        }
+        return instance;
     }
 
     public void initializeHomePage() {
-        initializePanels();
-        initializeBackground();
-        initializeCategoryPart();
+
     }
 
-    private void initializePanels() {
+    private void initComponents() {
+        BACKGROUND_IMAGE = new ImageIcon("src\\gui\\static\\images\\home_background.png");
         mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BorderLayout());
-        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         categoriesLabelPanel = new JPanel();
-        categoriesLabelPanel.setLayout(new GridBagLayout());
-        bottomPanel.add(categoriesLabelPanel, BorderLayout.NORTH);
         categoriesPanel = new JPanel();
-        categoriesPanel.setLayout(new GridLayout(0, 3));
+        backgroundPanel = new JLabel(BACKGROUND_IMAGE);
+        fruitvegetableButton = new JButton("Fruit's & Vegetable");
+        meatButton = new JButton("Meat");
+        fishButton = new JButton("Fish");
+    }
+
+    private void setLayout() {
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        mainPanel.add(backgroundPanel, BorderLayout.CENTER);
+
+        bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.add(categoriesLabelPanel, BorderLayout.NORTH);
         bottomPanel.add(categoriesPanel, BorderLayout.CENTER);
 
-        setBorder(BorderFactory.createEmptyBorder());
-        add(new JScrollPane(mainPanel), BorderLayout.CENTER);
-    }
+        categoriesLabelPanel.setLayout(new GridBagLayout());
+        
+        categoriesPanel.setLayout(new GridLayout(0, 3));
 
-    private void initializeBackground() {
-        JLabel backgroundImage = new JLabel(new ImageIcon("src\\gui\\static\\images\\home_background.png"));
-        mainPanel.add(backgroundImage, BorderLayout.CENTER);
-    }
-
-    private void initializeCategoryPart() {
         JLabel categoriesLabel = new JLabel("Categories");
         categoriesLabelPanel.add(categoriesLabel);
 
-        // Fruits & Vegetables
-        JButton fruitvegetableButton = new JButton("Fruit's & Vegetable");
         categoriesPanel.add(fruitvegetableButton);
-
-        // Meat 
-        JButton meatButton = new JButton("Meat");
         categoriesPanel.add(meatButton);
-
-        // Fish
-        JButton fishButton = new JButton("Fish");
         categoriesPanel.add(fishButton);
+        
+        setBorder(BorderFactory.createEmptyBorder());
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(40);
+        add(scrollPane, BorderLayout.CENTER);
+
     }
 
     public static void main(String[] args) {
