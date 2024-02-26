@@ -2,158 +2,136 @@ package gui.Pages;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.swing.*;
-import core.*;
+
+import core.ItemClass;
+import core.Items;
+import core.PersonClass;
 
 
 public class StorePage extends JPanel{
-    JPanel itemsPanel;
+    /*
+     * TO DO:
+     * Refactor SotrePage - in Progress
+     * Fix bug where you can add items with 0 quantity - Done
+     * Creating a sorting system - In progress
+     * Add search functionality
+     * Add pric range functionality ex. 100-500
+     * Add logo?
+     */
+
+    private static String[] categoryList = {"All", "Fruit", "Vegetable", "Meat", "Fish"};
+
+    private TopPanel topPanel;
+
+    private JPanel leftPanel;
+    private JPanel itemsPanel;
+
+    private JComboBox categories;
+
+    int SPACE_BETWEEN = 30;
     CardLayout cardLayout;
-    HashMap<String, String> itemNames;
+    PersonClass user;
+    SortedMap<String, String> itemNames;
     HashMap<Integer, String> itemPrices;
-    public StorePage() {
+    public StorePage(PersonClass user, TopPanel topPanel) {
+        this.user = user;
+        this.topPanel = topPanel;
         setLayout(new BorderLayout());
-        itemNames = new HashMap<String, String>();
-        itemsPanel = new JPanel();
-        cardLayout = new CardLayout();
-        itemsPanel.setLayout(cardLayout);
-        add(itemsPanel, BorderLayout.CENTER);
-        initializeLeftPanel();
-        loadMeatItems();
-        loadFishItems();
-        loadFruitItems();
-        loadVegetableItems();
+        initializeMaps();
+        initializeComponents();
+        setLayout();
+        addListeners();
+        loadItems(Items.itemData);
+        loadByAlphaOrder(false);
         setVisible(true);
     }
 
-    public void initializeLeftPanel() {
-        String[] categoryList = {"Fruit", "Vegetable", "Meat", "Fish", "All"};
-        JPanel leftPanel = new JPanel();
-        JComboBox categories = new JComboBox<>(categoryList);
+    private void initializeMaps() {
+        itemNames = new TreeMap<>();
+    }
+
+    private void initializeComponents() {
+        leftPanel = new JPanel();
+        itemsPanel = new JPanel();
+        categories = new JComboBox<>(categoryList);
+
+    }
+
+    public void setLayout() {
+        leftPanel.setLayout(new GridBagLayout());
+        categories.setFont(new Font("Arial", Font.PLAIN, 30));
+        categories.setPreferredSize(new Dimension(300, 40));
+        leftPanel.add(categories);
+        leftPanel.setBackground(Color.GRAY);
+        add(new JScrollPane(itemsPanel), BorderLayout.CENTER);
+        add(leftPanel, BorderLayout.WEST);
+    }
+
+    private void addListeners() {
         categories.addActionListener(e -> {
-            switch ((String)categories.getSelectedItem()) {
+            String selectedCategory = (String) categories.getSelectedItem();
+            switch (selectedCategory) {
+                case "All": {
+                    loadItems(Items.itemData);
+                    break;
+                }
                 case "Fruit": {
-                    cardLayout.show(itemsPanel, "fruit");
+                    loadItems(Items.fruitList);
                     break;
                 }
                 case "Vegetable": {
-                    cardLayout.show(itemsPanel, "vegetable");
+                    loadItems(Items.vegetableList);
                     break;
                 }
                 case "Meat": {
-                    cardLayout.show(itemsPanel, "meat");
+                    loadItems(Items.meatList);
                     break;
                 }
                 case "Fish": {
-                    cardLayout.show(itemsPanel, "fish");
+                    loadItems(Items.fishList);
                     break;
                 }
             }
         });
-        leftPanel.add(categories);
-        leftPanel.setBackground(Color.GRAY);
-        add(leftPanel, BorderLayout.WEST);
     }
 
-    public void loadMeatItems() {
-        int SPACE_BETWEEN = 15;
-        JPanel meatPanel = new JPanel();
-        meatPanel.setLayout(new GridBagLayout());
+    public void loadItems(ArrayList<ItemClass> list) {
+        itemsPanel.removeAll();
+        itemsPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
         Insets inset = new Insets(SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN);
         gbc.insets = inset;
-        for (int i = 0; i < Items.meatList.length; i++) {
-            if (gbc.gridx == 2) {
-                gbc.gridx = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (gbc.gridx == 3) {
                 gbc.gridy++;
-                inset.left = SPACE_BETWEEN + 10;
-                inset.right = SPACE_BETWEEN + 10;
+                gbc.gridx = 0;
             } else {
                 gbc.gridx++;
             }
-            MeatItem item = Items.meatList[i];
+            ItemClass item = list.get(i);
             ItemGui itemGui = new ItemGui(item);
-            itemNames.put(item.itemName, "Meat");
-            meatPanel.add(itemGui, gbc);
-        }
-        itemsPanel.add(new JScrollPane(meatPanel), "meat");
-    }
+            itemGui.setUser(user);
+            itemGui.setStockInformation(user.cart.itemList.inStock(item.getName(), 1));
+            itemGui.storeLayout();
+            itemGui.setTopPanel(topPanel);
+            itemNames.put(item.getName(), item.getCategory());
+            itemsPanel.add(itemGui, gbc);
 
-    public void loadFishItems() {
-        int SPACE_BETWEEN = 15;
-        JPanel fishPanel = new JPanel();
-        fishPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        Insets inset = new Insets(SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN);
-        gbc.insets = inset;
-        for (int i = 0; i < Items.fishList.length; i++) {
-            if (gbc.gridx == 2) {
-                gbc.gridx = 0;
-                gbc.gridy++;
-                inset.left = SPACE_BETWEEN + 10;
-                inset.right = SPACE_BETWEEN + 10;
-            } else {
-                gbc.gridx++;
-            }
-            FishItem item = Items.fishList[i];
-            ItemGui itemGui = new ItemGui(item);
-            itemNames.put(item.itemName, "Fish");
-            fishPanel.add(itemGui, gbc);
         }
-        itemsPanel.add(new JScrollPane(fishPanel), "fish");
-    }
-
-    public void loadFruitItems() {
-        int SPACE_BETWEEN = 15;
-        JPanel fruitPanel = new JPanel();
-        fruitPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        Insets inset = new Insets(SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN);
-        gbc.insets = inset;
-        for (int i = 0; i < Items.fruitList.length; i++) {
-            if (gbc.gridx == 2) {
-                gbc.gridx = 0;
-                gbc.gridy++;
-                inset.left = SPACE_BETWEEN + 10;
-                inset.right = SPACE_BETWEEN + 10;
-            } else {
-                gbc.gridx++;
-            }
-            FruitItem item = Items.fruitList[i];
-            ItemGui itemGui = new ItemGui(item);
-            itemNames.put(item.itemName, "Fruit");
-            fruitPanel.add(itemGui, gbc);
-        }
-        itemsPanel.add(new JScrollPane(fruitPanel), "fruit");
-    }
-
-    public void loadVegetableItems() {
-        int SPACE_BETWEEN = 15;
-        JPanel vegetablePanel = new JPanel();
-        vegetablePanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        Insets inset = new Insets(SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN);
-        gbc.insets = inset;
-        for (int i = 0; i < Items.vegetableList.length; i++) {
-            if (gbc.gridx == 2) {
-                gbc.gridx = 0;
-                gbc.gridy++;
-                inset.left = SPACE_BETWEEN + 10;
-                inset.right = SPACE_BETWEEN + 10;
-            } else {
-                gbc.gridx++;
-            }
-            VegetableItem item = Items.vegetableList[i];
-            ItemGui itemGui = new ItemGui(item);
-            itemNames.put(item.itemName, "Vegetable");
-            vegetablePanel.add(itemGui, gbc);
-        }
-        itemsPanel.add(new JScrollPane(vegetablePanel), "vegetable");
+        itemsPanel.repaint();
+        itemsPanel.revalidate();
     }
 
     public void loadByPrice(boolean reversed) {
@@ -161,21 +139,14 @@ public class StorePage extends JPanel{
     }
 
     public void loadByAlphaOrder(boolean reversed) {
-        itemNames.forEach((key, value) -> {
-            switch (value) {
-                case "Meat": {
-                    
-                }
-            }
-        });
+
     }
 
-    // private ItemGui findKey(String key) {
-    //     return new ItemGui(new)
-    // }
+    public void setTopPanel(TopPanel panel) {
+        this.topPanel = panel;
+    }
+
 
     public static void main(String[] args) {
-        StorePage storePage = new StorePage();
-        storePage.setVisible(true);
     }
 }
