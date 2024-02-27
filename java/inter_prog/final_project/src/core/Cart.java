@@ -2,8 +2,9 @@ package core;
 import java.util.HashMap;
 
 public class Cart {
-    HashMap<String, Integer> cart;
-    Items itemList;
+    public HashMap<String, Integer> cart;
+    public HashMap<String, Integer> finalCart;
+    public Items itemList;
     int takenFromStock = 0;
     double cartTotal = 0;
 
@@ -24,7 +25,7 @@ public class Cart {
             takenFromStock++;
             System.out.println("Added to cart");
         }
-        System.out.println(itemList.itemStock.get(itemList.items.get(item.getName())));
+        System.out.println(itemList.itemStock.get(Items.items.get(item.getName())));
     }
 
     public void subtractFromCart (ItemClass item) {
@@ -39,7 +40,7 @@ public class Cart {
             takenFromStock--;
             System.out.println("Removed from cart");
         }
-        System.out.println(itemList.itemStock.get(itemList.items.get(item.getName())));
+        System.out.println(itemList.itemStock.get(Items.items.get(item.getName())));
     }
 
     public void addToCart (ItemClass item, int quantity) {
@@ -54,6 +55,6 @@ public class Cart {
             takenFromStock += quantity;
             System.out.println("Added to cart");
         }
-        System.out.println(itemList.itemStock.get(itemList.items.get(item.getName())));
+        System.out.println(itemList.itemStock.get(Items.items.get(item.getName())));
     }
 }
