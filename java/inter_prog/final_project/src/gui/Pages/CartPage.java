@@ -187,7 +187,7 @@ public class CartPage extends JPanel implements ItemGuiListener{
         purchaseButton.addActionListener(e -> {
             if (calculateFinalPrice() > user.getWallet().getBalance()) {
 
-            } else {
+            } else if (user.cart.cart.size() > 0){
                 if (listener != null) {
                     listener.purchaseEvent();
                 }
