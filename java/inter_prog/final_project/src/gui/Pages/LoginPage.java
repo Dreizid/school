@@ -2,14 +2,16 @@ package gui.Pages;
 import javax.swing.*;
 
 import core.PersonClass;
+import core.Users;
 import gui.MainGui;
 import gui.widgets.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.util.Arrays;
 public class LoginPage extends JFrame{
     private int WIDTH = 1200;
     private int HEIGHT = 800;
+
+    MainGui mainGui;
     RoundJTextField usernameField;
     RoundJPasswordField passwordField;
     JPanel loginPanel;
@@ -19,7 +21,10 @@ public class LoginPage extends JFrame{
     JLabel SOUTH;
     JLabel EAST;
     JLabel WEST;
-    public LoginPage () {
+
+    PersonClass person;
+    public LoginPage (MainGui mainGui) {
+        this.mainGui = mainGui;
         setSize(WIDTH, HEIGHT);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -31,6 +36,7 @@ public class LoginPage extends JFrame{
         initializeTextFieldLabel();
         initializeButtons();
         add(background);
+        setVisible(true);
     }
     public void initializeBorders() {
         NORTH = new JLabel(" ");
@@ -94,13 +100,14 @@ public class LoginPage extends JFrame{
         rememberBox.setBounds(40, 320, 226, 40); // okay
         rememberBox.setBackground(Color.WHITE);
         loginPanel.add(rememberBox);
-        RoundJButton signInButton = new RoundJButton("Log in", 50, LOG_IN_BUTTON_COLOR);
+        RoundJButton signInButton = new RoundJButton("Log in", 50, Color.BLACK);
         signInButton.addActionListener(e -> {
             if (isAdmin()) {
 
             } else if (authenticate()) {
                 setVisible(false);
-                MainGui main = new MainGui();
+                this.mainGui.autheticationSuccessful();
+                this.mainGui.setVisible(true);
             }
         });
         signInButton.setBounds(90, 370, 226, 70); // okay
@@ -109,6 +116,9 @@ public class LoginPage extends JFrame{
         signInButton.setBackground(LOG_IN_BUTTON_COLOR); 
         loginPanel.add(signInButton);
         JButton signUpButton = new JButton("Sign up");
+        signUpButton.addActionListener(e -> {
+            RegistrationPage.getInstance();
+        });
         signUpButton.setBounds(160, 500, 90, 50); // okay
         signUpButton.setBorderPainted(false);
         loginPanel.add(signUpButton);
@@ -118,10 +128,13 @@ public class LoginPage extends JFrame{
     private boolean authenticate() {
         char[] enteredPassword = passwordField.getPassword();
         String enteredPasswordString = new String(enteredPassword);
-        if (usernameField.getText().equals("Rei") && enteredPasswordString.equals("123")) {
-            Arrays.fill(enteredPassword, ' ');
-            return true;
-        }
+        for (PersonClass person: Users.users) {
+            if (usernameField.getText().equals(person.getUsername()) && enteredPasswordString.equals(person.getPassword())) {
+                Arrays.fill(enteredPassword, ' ');
+                loginEvent(person);
+                return true;
+            }
+        } 
         Arrays.fill(enteredPassword, ' ');
         return false;
     }
@@ -137,14 +150,13 @@ public class LoginPage extends JFrame{
         return false;
     }
 
-    public PersonClass loginEvent() {
-        PersonClass person = new PersonClass("Rei", "First Name A. Last", "example@gmail.com", "123", "+63 012-345-6789");
-        return person;
+    public void loginEvent(PersonClass user) {
+        person = user;
+    }
+
+    public PersonClass getUser() {
+        return this.person;
     }
 
 
-    public static void main(String[] args) {
-        LoginPage login = new LoginPage();
-        login.setVisible(true);
-    }
 }

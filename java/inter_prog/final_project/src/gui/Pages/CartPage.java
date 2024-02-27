@@ -12,12 +12,20 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 import core.Coupons;
+import core.Items;
 import core.PersonClass;
 
 interface CartListener {
     void purchaseEvent();
 }
 public class CartPage extends JPanel implements ItemGuiListener{
+    /*
+     * TO DO: 
+     * Clean up GUI
+     * Clean up very dirty logic and code
+     * Fix bugs
+     * 
+     */
     private static CartPage instance;
 
     private CartListener listener;
@@ -144,7 +152,7 @@ public class CartPage extends JPanel implements ItemGuiListener{
         fee.setBackground(backgroundColor);
         fee.setFont(textFont);
         // TO DO: Add logic to increase fee depending on the amount of items
-        fee.setText("₱ " + String.format("%.2f", serviceFee));
+        calculateServiceFee();
         fee.setBorder(BorderFactory.createEmptyBorder());
         setCartGbc(1, 4, 1);
         cartPanel.add(fee, cartgbc);
@@ -186,17 +194,20 @@ public class CartPage extends JPanel implements ItemGuiListener{
                 user.getWallet().subtractBalance(calculateFinalPrice());
                 user.order.addOrder(user.cart);
                 user.createNewCart();
+                calculateServiceFee();
                 itemsPanel.removeAll();
                 itemsPanel.revalidate();
                 itemsPanel.repaint();
                 addedItems.clear();
                 reloadPage();
+                JOptionPane.showMessageDialog(null , "Succesfully purchased!", "Thank you for buying!", JOptionPane.INFORMATION_MESSAGE);
                 // Popup message saying suscessfully bought
             }
         });
         applyCouponButton.addActionListener(e -> {
             setVoucherValue(getCoupon());
             total.setText("₱ " + Double.valueOf(calculateFinalPrice()));
+            couponField.setText("");
         });
     }
 
@@ -208,7 +219,6 @@ public class CartPage extends JPanel implements ItemGuiListener{
     }
 
     public void reloadPage() {   
-
         itemsgbc.insets = new Insets(50, 100, 0, 100);
         if (user.cart.cart.size() > 0) {
             System.out.println(user.cart.cart.size());
@@ -218,7 +228,7 @@ public class CartPage extends JPanel implements ItemGuiListener{
             user.cart.cart.forEach((key, value) -> {
                 if (!addedItems.contains(key)) {
                     itemsgbc.gridy++;
-                    ItemGui itemGui = new ItemGui(user.cart.itemList.items.get(key));
+                    ItemGui itemGui = new ItemGui(Items.items.get(key), user);
                     itemGui.setUser(user);
                     itemGui.setStockInformation(user.cart.itemList.inStock(key, 1));
                     itemGui.cartLayout();
@@ -229,12 +239,16 @@ public class CartPage extends JPanel implements ItemGuiListener{
             });
             
         } else if (itemsPanel.getComponentCount() == 0){
+            noItems.removeAll();
+            noItems.repaint();
+            noItems.revalidate();
             JLabel noItemLabel = new JLabel("No items in cart");
             noItems.add(noItemLabel);
             noItems.setPreferredSize(new Dimension(1450, 300));
             itemsPanel.add(noItems);
             
         }
+        calculateServiceFee();
         itemsPanel.repaint();
         calculateFinalCart();
         total.setText("₱ " + Double.valueOf(calculateFinalPrice()));
@@ -244,7 +258,7 @@ public class CartPage extends JPanel implements ItemGuiListener{
     private void calculateFinalCart() {
         double[] total = {0};
         user.cart.cart.forEach((key, value) -> {
-            total[0] += user.cart.itemList.items.get(key).getPrice() * value;
+            total[0] += Items.items.get(key).getPrice() * value;
         });
         totalPrice.setText("₱ " + String.format("%.2f", total[0]));
 
@@ -253,6 +267,16 @@ public class CartPage extends JPanel implements ItemGuiListener{
     private Double calculateFinalPrice() {
         double finalPrice = Double.valueOf(totalPrice.getText().replace("₱ ", "")) - Double.valueOf(discount.getText().replace("₱ ", "")) + serviceFee;
         return finalPrice;
+    }
+
+    private void calculateServiceFee() {
+        if (user.cart.cart.size() != 0) {
+            fee.setText("₱ " + "70.00");
+            serviceFee = 70.00;
+        } else {
+            fee.setText("₱ " + "0.00");
+            serviceFee = 0.00;
+        }
     }
 
     public String getCoupon() {
@@ -302,6 +326,12 @@ public class CartPage extends JPanel implements ItemGuiListener{
     
         discount.setText("₱ " + discountValue);
         user.getAvailabeCoupons().remove(voucher);
+    }
+
+    @Override
+    public void trashButtonClicked() {
+        System.out.println("hi");
+        reloadPage();
     }
 
 
