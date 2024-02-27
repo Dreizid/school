@@ -5,10 +5,12 @@ public class PersonClass {
     private String email;
     private String password;
     private String phoneNumber;
-    double balance = 0;
+    private String profilePicturePath;
+    private Wallet wallet = new Wallet();
     boolean remembered = false;
-    Cart cart = new Cart();
-    // Create an instance of all items?
+    private Coupons availableCoupons = new Coupons();
+    public Cart cart = new Cart();
+    public Orders order = new Orders();
 
     public PersonClass(String username, String name, String email, String password, String phoneNumber) {
         this.username = username;
@@ -18,23 +20,50 @@ public class PersonClass {
         this.phoneNumber = phoneNumber;
     }
 
-    public void addBalance (int moneyAdded) {
-        this.balance += moneyAdded;
-    }
-
-    public void subtractBalance (int moneySubtracted) {
-        this.balance -= moneySubtracted;
+    public void setProfile(String imagePath) {
+        this.profilePicturePath = imagePath;
     }
 
     public String getUsername() {
         return this.username;
     }
 
+    public String getFullName() {
+        return this.fullName;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getNumber() {
+        return this.phoneNumber;
+    }
+
     public String getPassword() {
         return this.password;
     }
 
+    public Wallet getWallet() {
+        return this.wallet;
+    }
+
+    public String getPicture() {
+        if (this.profilePicturePath != null) {
+            return this.profilePicturePath;
+        }
+        return "src\\gui\\static\\images\\defaultprofile.png";
+    }
+
     public void isRemembered () {
         this.remembered = true;
+    }
+
+    public void createNewCart() {
+        cart = new Cart();
+    }
+
+    public Coupons getAvailabeCoupons() {
+        return this.availableCoupons;
     }
 }
