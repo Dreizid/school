@@ -7,8 +7,13 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import core.PersonClass;
+import gui.widgets.BadgeButton;
 
-public class TopPanel extends JPanel {
+interface TopListener {
+    void searchButtonPressed(String text);
+}
+
+public class TopPanel extends JPanel implements CartListener, HomeListener{
     private static TopPanel instance;
 
     private static final Font FONT = new Font("Arial", Font.PLAIN, 30);
@@ -24,25 +29,30 @@ public class TopPanel extends JPanel {
 
     private CardLayout cardLayout;
 
+    private TopListener listener;
+
     private JPanel parentPanel;
 
     private JTextField searchField;
+    private JTextField balanceField;
     
     private JButton homeButton;
     private JButton storeButton;
     private JButton contactButton;
     private JButton searchButton;
-    private JButton cartButton;
     private JButton walletButton;
     private JButton profileButton;
+
+    private BadgeButton cartButton;
+
 
     private JPopupMenu walletMenu;
     private JPopupMenu profileMenu;
 
-    private JMenu walletBalance;
-    private JMenu walletAddBalance;
+    private JMenuItem walletAddBalance;
+    private JMenuItem viewOrder;
     private JMenu viewInformation;
-    private JMenu logOut;
+    private JMenuItem logOut;
 
     private PersonClass user;
 
@@ -68,13 +78,13 @@ public class TopPanel extends JPanel {
         contactButton = new JButton("Contact");
         searchField = new JTextField(SEARCH_FIELD_TEXT, 10);
         searchButton = new JButton(new ImageIcon("src\\gui\\static\\images\\search.png"));
-        cartButton = new JButton(CART_ICON);
+        cartButton = new BadgeButton();
         walletMenu= new JPopupMenu();
-        walletBalance = new JMenu("Balance: ");
-        walletAddBalance = new JMenu("Add balance");
+        walletAddBalance = new JMenuItem("Add balance");
         walletButton = new JButton(new ImageIcon("src\\gui\\static\\images\\wallet.png"));
         profileMenu = new JPopupMenu();
         viewInformation = new JMenu("View information");
+        viewOrder = new JMenuItem("View order's");
         logOut = new JMenu("Log out");
         profileButton = new JButton(new ImageIcon(user.getPicture()));
     }
@@ -130,12 +140,14 @@ public class TopPanel extends JPanel {
         add(searchPanel);
         add(Box.createHorizontalStrut(45));
 
-        cartButton.setBackground(BACKGROUND_COLOR);
-        cartButton.setBorder(BorderFactory.createEmptyBorder());
+        cartButton.setIcon(CART_ICON);
+        cartButton.setBadgeColor(new Color(131, 46, 203));
+        cartButton.setText("0");
+        // cartButton.setBorder(BorderFactory.createEmptyBorder(15, 13, 10, 11));
         add(cartButton);
         add(Box.createHorizontalStrut(25));
 
-        walletMenu.add(walletBalance);
+        walletMenu.add(loadBalance());
         walletMenu.add(walletAddBalance);
         walletButton.setBackground(BACKGROUND_COLOR);
         walletButton.setBorder(BorderFactory.createEmptyBorder());
@@ -143,6 +155,7 @@ public class TopPanel extends JPanel {
         add(Box.createHorizontalStrut(25));
 
         profileMenu.add(viewInformation);
+        profileMenu.add(viewOrder);
         profileMenu.add(logOut);
 
         profileButton.setBackground(BACKGROUND_COLOR);
@@ -205,17 +218,34 @@ public class TopPanel extends JPanel {
             }
         });
 
+        searchButton.addActionListener(e -> {
+            if (listener != null) {
+                listener.searchButtonPressed(searchField.getText());
+                cardLayout.show(parentPanel, "storePage");
+            }
+        });
+
         cartButton.addActionListener(e -> {
             homeButton.setForeground(Color.BLACK);
             storeButton.setForeground(Color.BLACK);
             contactButton.setForeground(Color.BLACK);
             cartButton.setIcon(CART_SELECTED_ICON);
+            cardLayout.show(parentPanel,"cartPage");
         });
 
         walletButton.addActionListener(e -> {
             if (e.getSource() == walletButton) {
                 walletMenu.show(walletButton, 0, walletButton.getHeight());
+                balanceField.setText("₱ " + String.format("%.2f", this.user.getWallet().getBalance()));
             }
+        });
+
+        walletAddBalance.addActionListener(e -> {
+            openAddBalanceFrame(user);
+        });
+
+        viewOrder.addActionListener(e -> {
+            cardLayout.show(parentPanel, "ordersPage");
         });
 
         profileButton.addActionListener(e -> {
@@ -223,6 +253,49 @@ public class TopPanel extends JPanel {
                 profileMenu.show(profileButton, 0, profileButton.getHeight());
             }
         });
+
+        logOut.addActionListener(e -> {
+        });
+    }
+
+
+    private static void openAddBalanceFrame(PersonClass user) {
+        JFrame newFrame = new JFrame("New Frame with Buttons");
+        newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JButton add1k = new JButton("Add 1,000");
+        add1k.addActionListener(e -> {
+            user.getWallet().addBalance(1000);
+        });
+        JButton add10k = new JButton("Add 10,000");
+        add10k.addActionListener(e -> {
+            user.getWallet().addBalance(10000);
+        });
+        JButton clear = new JButton("Remove Balance");
+        clear.addActionListener(e -> {
+            user.getWallet().subtractBalance(user.getWallet().getBalance());
+        });
+
+        JPanel panel = new JPanel();
+        panel.add(add1k);
+        panel.add(add10k);
+        panel.add(clear);
+
+        newFrame.getContentPane().add(panel, BorderLayout.CENTER);
+
+        newFrame.pack();
+        newFrame.setLocationRelativeTo(null);
+        newFrame.setVisible(true);
+    }
+
+    private JPanel loadBalance() {
+        JPanel panel = new JPanel();
+        JLabel text = new JLabel("Balance: ");
+        balanceField = new JTextField("₱ " + String.format("%.2f", this.user.getWallet().getBalance()));
+        balanceField.setEditable(false); 
+        panel.add(text);
+        panel.add(balanceField);
+        return panel;
     }
 
     public String getSearchedItem() {
@@ -232,4 +305,36 @@ public class TopPanel extends JPanel {
     public JButton getSearchButton() {
         return this.searchButton;
     }
-}
+
+    public JButton getCartButton() {
+        return this.cartButton;
+    }
+
+    public JMenuItem getViewOrders() {
+        return this.viewOrder;
+    }
+
+    public void setListener(TopListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public void purchaseEvent() {
+        cartButton.setText("0");
+    }
+
+    @Override
+    public void fishButtonClicked() {
+        storeButton.doClick();
+    }
+
+    @Override
+    public void meatButtonClicked() {
+        storeButton.doClick();
+    }
+
+    @Override
+    public void fruitButtonClick() {
+        storeButton.doClick();
+    }
+} 
