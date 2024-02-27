@@ -3,15 +3,14 @@ package gui.Pages;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 
-import com.formdev.flatlaf.json.ParseException;
-
 import gui.widgets.RoundJButton;
 
 import java.awt.*;
 
 public class RegistrationPage extends JFrame{
+    private static RegistrationPage instance;
     
-    public RegistrationPage() {
+    private RegistrationPage() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(1048, 550);
@@ -19,6 +18,13 @@ public class RegistrationPage extends JFrame{
         initializeRight();
         initializeLeft();
         setVisible(true);
+    }
+
+    public static RegistrationPage getInstance() {
+        if (instance == null) {
+            instance = new RegistrationPage();
+        }
+        return instance;
     }
 
     public void initializeRight() {
@@ -121,11 +127,17 @@ public class RegistrationPage extends JFrame{
 
         // Buttons
         RoundJButton signUpButton = new RoundJButton("Sign up", 20, Color.GREEN);
+        signUpButton.addActionListener(e -> {
+            setVisible(false);
+        });
         signUpButton.setBackground(Color.GREEN);
         labelgbc.gridy += 2;
         leftPanel.add(signUpButton, labelgbc);
-        RoundJButton backButton = new RoundJButton("Back", 20, Color.GREEN);
-        signUpButton.setBackground(Color.GREEN);
+        RoundJButton backButton = new RoundJButton("Back", 20, Color.GRAY);
+        backButton.addActionListener(e -> {
+            setVisible(false);
+        });
+        backButton.setBackground(Color.GRAY);
         labelgbc.anchor = GridBagConstraints.EAST;
         labelgbc.gridx = 1;
         leftPanel.add(backButton, labelgbc);
@@ -136,9 +148,5 @@ public class RegistrationPage extends JFrame{
 
     private String repeatCharacter(char character, int n) {
         return new String(new char[n]).replace('\0', character);
-    }
-
-    public static void main(String[] args) {
-        RegistrationPage test = new RegistrationPage();
     }
 }
