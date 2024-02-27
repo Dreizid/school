@@ -78,13 +78,19 @@ public class HomePage extends JPanel{
         mainPanel.add(backgroundPanel, BorderLayout.CENTER);
 
         backgroundPanel.setLayout(null);
-
-        JLabel homePageTitle = new JLabel("<html>FRESH & ORGANIC<br>FOOD MARKET</hmtl>"); // Pa ayos font size and font pati color naren
-        JLabel homePageText = new JLabel("<html>WE'LL PROVIDE<br>EVERYTHING<br>YOU NEED</html>"); // Pa ayos font size and font pati color naren
+        
+        JLabel homePageTitle = new JLabel("<html>FRESH & ORGANIC FOOD MARKET<html>"); //OKAY NA
+        JLabel homePageText = new JLabel("<html>WE'LL PROVIDE<br>EVERYTHING<br>YOU NEED</html>"); // OKAY NA
         homePageText.setHorizontalAlignment(SwingConstants.LEFT);
-        homePageText.setBounds(10, 500, 100, 100); // Pa edit
+        homePageText.setBounds(120, 420, 670, 450); // OKAY NA
+        homePageText.setFont(new Font("Open Sans MS", Font.PLAIN, 76));
+        homePageText.setForeground(new Color(53, 94, 59));
         homePageTitle.setHorizontalAlignment(SwingConstants.LEFT);
-        homePageTitle.setBounds(10, 400, 100, 100); // Pa edit
+        homePageTitle.setBounds(120, 220, 900, 350); // OKAY
+        homePageTitle.setFont(new Font("Open Sans MS", Font.BOLD, 80));
+        homePageTitle.setForeground(new Color(0, 100, 0));
+        
+    
         backgroundPanel.add(homePageTitle); 
         backgroundPanel.add(homePageText);
 
@@ -97,12 +103,14 @@ public class HomePage extends JPanel{
         categoriesPanel.setLayout(new GridLayout(0, 3));
 
         JLabel categoriesLabel = new JLabel("Categories");
-        categoriesLabel.setFont(new Font("Arial", Font.PLAIN, 30));
-        categoriesLabel.setForeground(new Color(147, 197, 114));
+        categoriesLabel.setFont(new Font("Open Sans MS", Font.PLAIN, 30));
+        categoriesLabel.setForeground(new Color(0,100,0));
         categoriesLabelPanel.add(categoriesLabel);
 
         fruitvegetableButton.setIcon(FRUIT_ICON);
         fruitvegetableButton.setText("Fruits & Vegetables");
+        fruitvegetableButton.setFont(new Font("Open Sans MS", Font.BOLD, 20));
+        fruitvegetableButton.setForeground(new Color(0,100,0));
         fruitvegetableButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         fruitvegetableButton.setHorizontalTextPosition(SwingConstants.CENTER);
         fruitvegetableButton.setBackground(Color.WHITE);
@@ -111,7 +119,9 @@ public class HomePage extends JPanel{
         categoriesPanel.add(fruitvegetableButton);
 
         meatButton.setIcon(MEAT_ICON);
-        meatButton.setText("Meat");
+        meatButton.setText("Meats");
+        meatButton.setFont(new Font("Open Sans MS", Font.BOLD, 20));
+        meatButton.setForeground(new Color(0,100,0));
         meatButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         meatButton.setHorizontalTextPosition(SwingConstants.CENTER);
         meatButton.setBackground(Color.WHITE);
@@ -121,8 +131,11 @@ public class HomePage extends JPanel{
         
         fishButton.setIcon(FISH_ICON);
         fishButton.setText("Fish");
+        fishButton.setFont(new Font("Open Sans MS", Font.BOLD, 20));
+        fishButton.setForeground(new Color(0,100,0));
         fishButton.setVerticalTextPosition(SwingConstants.BOTTOM);
         fishButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        
         fishButton.setBackground(Color.WHITE);
         fishButton.setOpaque(false);
         fishButton.setFocusPainted(false);
@@ -139,7 +152,7 @@ public class HomePage extends JPanel{
         add(scrollPane, BorderLayout.CENTER);
 
         try {
-            UIManager.setLookAndFeel(new FlatLightLaf()); // or FlatLightLaf()
+           UIManager.setLookAndFeel(new FlatLightLaf()); // or FlatLightLaf()
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
