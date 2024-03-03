@@ -182,7 +182,7 @@ public class Items {
     }
 
     public boolean inStock(String item, int quantity) {
-        if (itemStock.get(items.get(item)) > quantity) {
+        if (itemStock.get(items.get(item)) >= quantity) {
             return true;
         }
         return false;
