@@ -10,7 +10,7 @@ public class PersonClass {
     boolean remembered = false;
     private Coupons availableCoupons = new Coupons();
     public Cart cart = new Cart();
-    public Orders order = new Orders();
+    public OrderList orderList = new OrderList();
 
     public PersonClass(String username, String name, String email, String password, String phoneNumber) {
         this.username = username;
@@ -28,16 +28,32 @@ public class PersonClass {
         return this.username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getFullName() {
         return this.fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
         return this.email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getNumber() {
         return this.phoneNumber;
+    }
+
+    public void setNumber(String number) {
+        this.phoneNumber = number;
     }
 
     public String getPassword() {
