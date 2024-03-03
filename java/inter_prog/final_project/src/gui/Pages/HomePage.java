@@ -196,5 +196,4 @@ public class HomePage extends JPanel{
         frame.setVisible(true);
         frame.add(homePage);    
     }
-    
 }
