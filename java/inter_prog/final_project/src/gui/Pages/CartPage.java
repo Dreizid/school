@@ -37,6 +37,8 @@ public class CartPage extends JPanel implements CartItemListener{
 
     protected static Color backgroundColor = new Color(131,179,115);
 
+    protected static ImageIcon noItemsIcon = new ImageIcon("src\\gui\\static\\images\\noitems.png");
+
     protected static Font textFont = new Font("Arial", Font.BOLD, 15);
 
     protected Double serviceFee,
@@ -52,6 +54,10 @@ public class CartPage extends JPanel implements CartItemListener{
     protected JButton applyCouponButton,
                     purchaseButton;
 
+    protected JLabel noItemLabel,
+                    noItemDescription,
+                    noItemDescription2;
+
     protected JTextField couponField,
                     totalPrice,
                     discount,
@@ -59,7 +65,8 @@ public class CartPage extends JPanel implements CartItemListener{
                     total;
 
     protected GridBagConstraints cartgbc,
-                            itemsgbc;
+                                itemsgbc,
+                                noItemgbc;
 
     protected HashMap<String, CartItem> addedItems;
 
@@ -104,10 +111,15 @@ public class CartPage extends JPanel implements CartItemListener{
 
         cartgbc = new GridBagConstraints();
         itemsgbc = new GridBagConstraints();
+        noItemgbc = new GridBagConstraints();
 
         addedItems = new HashMap<>();
 
         keysToRemove = new ArrayList<>();
+
+        noItemLabel = new JLabel("The shopping cart is currently empty");
+        noItemDescription = new JLabel("Looks like you have not added anything to the cart.");
+        noItemDescription2 = new JLabel("Go ahead and explore");
 
         serviceFee = 0.00;
         discountPrice = 0.00;
@@ -118,6 +130,7 @@ public class CartPage extends JPanel implements CartItemListener{
 
     private void setLayout() {
         setLayout(new BorderLayout());
+        noItems.setLayout(new GridBagLayout());
 
         itemsgbc.gridy = 0;
         cartgbc.insets = new Insets(20, 20, 20, 20);
@@ -274,9 +287,24 @@ public class CartPage extends JPanel implements CartItemListener{
             noItems.removeAll();
             noItems.repaint();
             noItems.revalidate();
-            JLabel noItemLabel = new JLabel("No items in cart");
-            noItems.add(noItemLabel);
-            noItems.setPreferredSize(new Dimension(1450, 300));
+            noItemgbc.gridy = 0;
+            noItemLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+            noItemLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
+            noItemLabel.setFont(new Font("Open Sans MS", Font.BOLD, 50));
+            noItemLabel.setIcon(noItemsIcon);
+            noItems.add(noItemLabel, noItemgbc);
+            
+            noItemDescription.setHorizontalAlignment(SwingConstants.CENTER);
+            noItemDescription.setFont(new Font("Open Sans MS", Font.PLAIN, 25));
+            noItemgbc.gridy = 1;
+            noItems.add(noItemDescription, noItemgbc);
+            
+            noItemDescription2.setHorizontalAlignment(SwingConstants.CENTER);
+            noItemDescription2.setVerticalTextPosition(SwingConstants.BOTTOM);
+            noItemDescription2.setFont(new Font("Open Sans MS", Font.PLAIN, 25));
+            noItemgbc.gridy = 2;
+            noItems.add(noItemDescription2, noItemgbc);
+            noItems.setPreferredSize(new Dimension(1450, 400));
             itemsPanel.add(noItems);
             
         }
@@ -378,5 +406,7 @@ public class CartPage extends JPanel implements CartItemListener{
         reloadPage();
     }
 
-
+    public void setUser(PersonClass user) {
+        this.user = user;
+    }
 }
