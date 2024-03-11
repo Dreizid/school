@@ -1,4 +1,4 @@
-package gui.Pages;
+package gui.Components;
 
 import core.Order;
 import core.Items;
@@ -79,7 +79,7 @@ public class Receipt extends JPanel{
 
         loadItems();
 
-        footerLabel.setText("THANK YOU");
+        footerLabel.setText("THANK YOU!");
         footerLabel.setFont(new Font("Arial", Font.BOLD, 18));
         footerLabel.setVerticalTextPosition(SwingConstants.TOP);
         footerLabel.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -127,7 +127,7 @@ public class Receipt extends JPanel{
             bodyConstraints.gridwidth = 1;
             bodyConstraints.gridx = 0;
             bodyConstraints.anchor = GridBagConstraints.WEST;
-            JLabel couponLabel = new JLabel("Coupon used");
+            JLabel couponLabel = new JLabel("Coupon Used:");
             bodyPanel.add(couponLabel, bodyConstraints);
     
             bodyConstraints.gridx = 1;
@@ -139,7 +139,7 @@ public class Receipt extends JPanel{
             bodyConstraints.gridx = 0;
             bodyConstraints.gridwidth = 1;
             bodyConstraints.anchor = GridBagConstraints.WEST;
-            JLabel discountLabel = new JLabel("Discount");
+            JLabel discountLabel = new JLabel("Discount:");
             bodyPanel.add(discountLabel, bodyConstraints);
     
             bodyConstraints.gridx = 1;
@@ -152,7 +152,7 @@ public class Receipt extends JPanel{
         bodyConstraints.gridx = 0;
         bodyConstraints.gridwidth = 1;
         bodyConstraints.anchor = GridBagConstraints.WEST;
-        JLabel serviceLabel = new JLabel("Service Fee");
+        JLabel serviceLabel = new JLabel("Service Fee:");
         bodyPanel.add(serviceLabel, bodyConstraints);
 
         bodyConstraints.gridx = 1;
@@ -164,7 +164,7 @@ public class Receipt extends JPanel{
         bodyConstraints.gridx = 0;
         bodyConstraints.gridwidth = 1;
         bodyConstraints.anchor = GridBagConstraints.WEST;
-        JLabel totalLabel = new JLabel("Total");
+        JLabel totalLabel = new JLabel("Total:");
         totalLabel.setFont(new Font("Arial", Font.BOLD, 12));
         bodyPanel.add(totalLabel, bodyConstraints);
 

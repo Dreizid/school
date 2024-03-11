@@ -1,9 +1,13 @@
-package gui.Pages;
+package gui;
+
 import javax.swing.*;
 
+import core.Items;
 import core.PersonClass;
 import core.Users;
-import gui.MainGui;
+
+import gui.Pages.MainGui;
+import gui.Pages.RegistrationPage;
 import gui.widgets.*;
 import java.awt.*;
 import java.util.Arrays;
@@ -23,9 +27,11 @@ public class LoginPage extends JFrame{
     JLabel WEST;
 
     PersonClass person;
-    public LoginPage (MainGui mainGui) {
-        this.mainGui = mainGui;
+
+    Items itemList = new Items();
+    public LoginPage () {
         setSize(WIDTH, HEIGHT);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         background = new JLabel(new ImageIcon("src\\gui\\static\\images\\login_background.png"));
@@ -94,30 +100,37 @@ public class LoginPage extends JFrame{
     }
 
     public void initializeButtons() {
-        Color LOG_IN_BUTTON_COLOR = new Color(193, 225, 193);
+        Color LOG_IN_BUTTON_COLOR = new Color(46, 139, 87);
         JCheckBox rememberBox = new JCheckBox("Remember me?");
         rememberBox.setFont(new Font("Open Sans MS", Font.PLAIN, 17));
         rememberBox.setBounds(40, 320, 226, 40); // okay
         rememberBox.setBackground(Color.WHITE);
         loginPanel.add(rememberBox);
-        RoundJButton signInButton = new RoundJButton("Log in", 50, Color.BLACK);
+        RoundJButton signInButton = new RoundJButton("Log in", 50, LOG_IN_BUTTON_COLOR);
         signInButton.addActionListener(e -> {
             if (isAdmin()) {
 
             } else if (authenticate()) {
                 setVisible(false);
-                this.mainGui.autheticationSuccessful();
-                this.mainGui.setVisible(true);
+                System.out.println(getUser().getFullName());
+                MainGui mainGui = new MainGui(itemList, getUser(), this);
+                mainGui.autheticationSuccessful();
+                mainGui.setVisible(true);
             }
         });
         signInButton.setBounds(90, 370, 226, 70); // okay
         signInButton.setFont(new Font("Open Sans MS", Font.PLAIN, 30));
+        signInButton.setForeground(Color.WHITE);
         signInButton.setBorderPainted(false);
+        signInButton.setContentAreaFilled(false);
+        signInButton.setFocusPainted(false);
         signInButton.setBackground(LOG_IN_BUTTON_COLOR); 
         loginPanel.add(signInButton);
         JButton signUpButton = new JButton("Sign up");
+        signUpButton.setContentAreaFilled(false);
+        signUpButton.setFocusPainted(false);
         signUpButton.addActionListener(e -> {
-            RegistrationPage.getInstance();
+            RegistrationPage registrationPage = new RegistrationPage();
         });
         signUpButton.setBounds(160, 500, 90, 50); // okay
         signUpButton.setBorderPainted(false);
@@ -158,5 +171,8 @@ public class LoginPage extends JFrame{
         return this.person;
     }
 
+    public static void main(String[] args) {
+        new LoginPage();
+    }
 
 }

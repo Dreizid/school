@@ -18,9 +18,10 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
 
     private static final Font FONT = new Font("Arial", Font.PLAIN, 30);
 
-    private static final Color SELECTED_PAGE_COLOR = Color.GREEN;
+    private static final Color SELECTED_PAGE_COLOR = new Color(0, 100, 0); // 34, 139, 34
     private static final Color BACKGROUND_COLOR = new Color(224, 227, 213);
 
+    
     private static final ImageIcon TOP_LOGO = new ImageIcon("src\\gui\\static\\images\\logo.png");
     private static final ImageIcon CART_ICON = new ImageIcon("src\\gui\\static\\images\\cart.png");
     private static final ImageIcon CART_SELECTED_ICON = new ImageIcon("src\\gui\\static\\images\\cartopen.png");
@@ -51,12 +52,12 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
 
     private JMenuItem walletAddBalance;
     private JMenuItem viewOrder;
-    private JMenu viewInformation;
+    private JMenuItem viewInformation;
     private JMenuItem logOut;
 
     private PersonClass user;
 
-    private TopPanel(CardLayout card, JPanel panel, PersonClass user) {
+    public TopPanel(CardLayout card, JPanel panel, PersonClass user) {
         this.cardLayout = card;
         this.parentPanel = panel;
         this.user = user;
@@ -83,10 +84,13 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
         walletAddBalance = new JMenuItem("Add balance");
         walletButton = new JButton(new ImageIcon("src\\gui\\static\\images\\wallet.png"));
         profileMenu = new JPopupMenu();
-        viewInformation = new JMenu("View information");
+        viewInformation = new JMenuItem("View information");
         viewOrder = new JMenuItem("View order's");
-        logOut = new JMenu("Log out");
-        profileButton = new JButton(new ImageIcon(user.getPicture()));
+        logOut = new JMenuItem("Log out");
+        ImageIcon profileIcon = new ImageIcon(user.getPicture());
+        Image scaledImage = profileIcon.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        ImageIcon scaledProfileIcon = new ImageIcon(scaledImage);
+        profileButton = new JButton(scaledProfileIcon);
     }
 
     private void setLayout() {
@@ -140,9 +144,10 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
         add(searchPanel);
         add(Box.createHorizontalStrut(45));
 
+        
         cartButton.setIcon(CART_ICON);
-        cartButton.setBadgeColor(new Color(131, 46, 203));
-        cartButton.setText("0");
+        cartButton.setBadgeColor(new Color(200, 100, 100));
+        cartButton.setText(String.valueOf(user.cart.getSize()));
         // cartButton.setBorder(BorderFactory.createEmptyBorder(15, 13, 10, 11));
         add(cartButton);
         add(Box.createHorizontalStrut(25));
@@ -254,13 +259,18 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
             }
         });
 
+        viewInformation.addActionListener(e -> {
+            cardLayout.show(parentPanel, "profilePage");
+        });
+
         logOut.addActionListener(e -> {
+
         });
     }
 
 
     private static void openAddBalanceFrame(PersonClass user) {
-        JFrame newFrame = new JFrame("New Frame with Buttons");
+        JFrame newFrame = new JFrame("Add balance");
         newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JButton add1k = new JButton("Add 1,000");
@@ -290,8 +300,12 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
 
     private JPanel loadBalance() {
         JPanel panel = new JPanel();
+        panel.setBackground(Color.WHITE);
         JLabel text = new JLabel("Balance: ");
+        text.setBackground(Color.WHITE);
         balanceField = new JTextField("₱ " + String.format("%.2f", this.user.getWallet().getBalance()));
+        balanceField.setBackground(Color.WHITE);
+        balanceField.setBorder(BorderFactory.createEmptyBorder());
         balanceField.setEditable(false); 
         panel.add(text);
         panel.add(balanceField);
@@ -312,6 +326,14 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
 
     public JMenuItem getViewOrders() {
         return this.viewOrder;
+    }
+
+    public JMenuItem getLogOut() {
+        return this.logOut;
+    }
+
+    public void setUser(PersonClass user) {
+        this.user = user;
     }
 
     public void setListener(TopListener listener) {

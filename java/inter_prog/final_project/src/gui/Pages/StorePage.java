@@ -18,12 +18,11 @@ import javax.swing.*;
 import core.ItemClass;
 import core.Items;
 import core.PersonClass;
+import gui.Components.ItemGui;
+import gui.Components.ShopItem;
 
 public class StorePage extends JPanel implements TopListener, HomeListener{
-    /*
-     * TO DO:
-     * Refactor SotrePage - in Progress
-     */
+    private static StorePage instance;
 
     private static String[] categoryList = {"All", "Fruit", "Vegetable", "Meat", "Fish"};
     private static String[] sortByList = {"Alphabetical: A to Z", "Alphabetical: Z to A", "Price: Low to High", "Price: High to Low", "Default"};
@@ -44,6 +43,8 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
 
     private JButton applyButton;
 
+    private JScrollPane scrollPane;
+
     private ArrayList<ItemClass> alphaList,
                                 priceList;
 
@@ -51,14 +52,17 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
     private SortedMap<Double, String> itemPrices;
 
     private String selectedCategory;
+
+    private Items itemList;
                                     
     int SPACE_BETWEEN = 30;
     CardLayout cardLayout;
     PersonClass user;
     
-    public StorePage(PersonClass user, TopPanel topPanel) {
+    public StorePage(PersonClass user, TopPanel topPanel, Items item) {
         this.user = user;
         this.topPanel = topPanel;
+        this.itemList = item;
         setLayout(new BorderLayout());
         initializeMaps();
         initializeComponents();
@@ -66,6 +70,13 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
         addListeners();
         loadItems(Items.itemData);
         setVisible(true);
+    }
+
+    public static StorePage getInstance(PersonClass user, TopPanel topPanel, Items item) {
+        if (instance == null) {
+            instance = new StorePage(user, topPanel, item);
+        }
+        return instance;
     }
 
     private void initializeMaps() {
@@ -84,33 +95,39 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
         applyButton = new JButton("Apply");
         lowerPrice = new JTextField(); 
         upperPrice = new JTextField();
-
+        scrollPane = new JScrollPane(itemsPanel);
+        selectedCategory = "All";
     }
 
     public void setLayout() {
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.NORTH;
-        gbc.insets = new Insets(30, 30, 0, 30);
-        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(10, 20, 10, 20);
+        gbc.gridx = 0;
         leftPanel.setLayout(new GridBagLayout());
-        categories.setFont(new Font("Arial", Font.PLAIN, 30));
+        categories.setFont(new Font("Open Sans MS", Font.PLAIN, 20));
+        categories.setBorder(BorderFactory.createEmptyBorder());
         categories.setPreferredSize(new Dimension(300, 40));
         leftPanel.add(categories, gbc);
 
-        gbc.gridy++;
-        sortBy.setFont(new Font("Arial", Font.PLAIN, 30));
+        gbc.gridx++;
+        sortBy.setFont(new Font("Open Sans MS", Font.PLAIN, 20));
+        sortBy.setBorder(BorderFactory.createEmptyBorder());
         sortBy.setPreferredSize(new Dimension(300, 40));
         leftPanel.add(sortBy, gbc);
-        leftPanel.setBackground(Color.GRAY);
+        leftPanel.setBackground(new Color(224, 227, 213));
 
         itemsPanel.setLayout(new GridBagLayout());
-        add(new JScrollPane(itemsPanel), BorderLayout.CENTER);
-        add(leftPanel, BorderLayout.WEST);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        add(scrollPane, BorderLayout.CENTER);
+        add(leftPanel, BorderLayout.NORTH);
 
-        gbc.gridy++;
+        gbc.gridx++;
         pricePanel.setLayout(new GridLayout(0, 3));
-        pricePanel.setBackground(Color.GRAY);
-        pricePanel.setPreferredSize(new Dimension(300, 30));
+        pricePanel.setBackground(new Color(224, 227, 213));
+        pricePanel.setPreferredSize(new Dimension(300, 35));
+        lowerPrice.setFont(new Font("Open Sans MS", Font.PLAIN, 20));
+        upperPrice.setFont(new Font("Open Sans MS", Font.PLAIN, 20));
         pricePanel.add(lowerPrice);
         JLabel dashLabel = new JLabel("-");
         dashLabel.setFont(new Font("Arial", Font.PLAIN, 50));
@@ -119,9 +136,10 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
         pricePanel.add(upperPrice);
         leftPanel.add(pricePanel, gbc);
 
-        gbc.gridy++;
+        gbc.gridx++;
         gbc.insets.top = 10;
-        applyButton.setPreferredSize(new Dimension(300, 30));
+        applyButton.setFont(new Font("Open Sans MS", Font.PLAIN, 20));
+        applyButton.setPreferredSize(new Dimension(300, 35));
         leftPanel.add(applyButton, gbc);
         
     }
@@ -202,23 +220,20 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
         Insets inset = new Insets(SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN, SPACE_BETWEEN);
         gbc.insets = inset;
         for (int i = 0; i < list.size(); i++) {
-            if (gbc.gridx == 3) {
+            if (gbc.gridx == 4) {
                 gbc.gridy++;
                 gbc.gridx = 0;
             } else {
                 gbc.gridx++;
             }
             ItemClass item = list.get(i);
-            ItemGui itemGui = new ItemGui(item, user);
+            ShopItem itemGui = new ShopItem(item, user, itemList);
             itemGui.setUser(user);
-            itemGui.setStockInformation(user.cart.itemList.inStock(item.getName(), 1));
-            itemGui.storeLayout();
             itemGui.setTopPanel(topPanel);
             setItemBackground(itemGui, item.getCategory());
             itemNames.put(item.getName(), item.getCategory());
             itemPrices.put(item.getPrice(), item.getName());
             itemsPanel.add(itemGui, gbc);
-
         }
         itemsPanel.repaint();
         itemsPanel.revalidate();
@@ -227,10 +242,9 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
     private void searchItem(String item) {
         itemsPanel.removeAll();
         ItemClass searchedItem = Items.loweredItems.get(item.toLowerCase());
-        ItemGui itemGui = new ItemGui(searchedItem, user);
+        System.out.println(searchedItem.getName());
+        ShopItem itemGui = new ShopItem(searchedItem, user, itemList);
         itemGui.setUser(user);
-        itemGui.setStockInformation(user.cart.itemList.inStock(searchedItem.getName(), 1));
-        itemGui.storeLayout();
         itemGui.setTopPanel(topPanel);
         setItemBackground(itemGui, searchedItem.getCategory());
         itemsPanel.add(itemGui);
@@ -295,6 +309,10 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
 
     public void setTopPanel(TopPanel panel) {
         this.topPanel = panel;
+    }
+
+    public void setUser(PersonClass user) {
+        this.user = user;
     }
 
     @Override

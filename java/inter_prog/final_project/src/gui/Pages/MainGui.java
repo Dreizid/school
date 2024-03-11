@@ -1,4 +1,4 @@
-package gui;
+package gui.Pages;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -7,14 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import gui.LoginPage;
+import core.Items;
 import core.PersonClass;
-import gui.Pages.CartPage;
-import gui.Pages.ContactPage;
-import gui.Pages.HomePage;
-import gui.Pages.LoginPage;
-import gui.Pages.OrdersPage;
-import gui.Pages.StorePage;
-import gui.Pages.TopPanel;
 
 public class MainGui extends JFrame{
     private JPanel mainPanel,
@@ -34,16 +29,25 @@ public class MainGui extends JFrame{
 
     private OrdersPage ordersPage;
 
+    private ProfilePage profilePage;
+
+    private Items itemList;
+
+    private PersonClass user;
 
     boolean isAuthenticated = false;
-    LoginPage loginPage;
-    PersonClass user = new PersonClass("Rei", "Rei A. Example", "Example@email.com", "123", "+63 012-345-6789");
+    private LoginPage parent;
+    // PersonClass user = new PersonClass("Rei", "Rei A. Example", "Example@email.com", "123", "+63 012-345-6789");
     TopPanel topPanel;
 
-    public MainGui() {
-        loginPage = new LoginPage(this);
+    public MainGui(Items itemList, PersonClass user, LoginPage parent) {
+        this.itemList = itemList;
+        this.user = user;
+        this.parent = parent;
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // loadGui();
+        // setVisible(true);
     }
 
     public void loadGui() {
@@ -58,12 +62,13 @@ public class MainGui extends JFrame{
         storePanel = new JPanel();
         cardPanel = new JPanel();
         cardLayout = new CardLayout();
-        homePage = HomePage.getInstance();
-        topPanel = TopPanel.getInstance(cardLayout, cardPanel, user);
-        storePage = new StorePage(user, topPanel);
+        homePage = new HomePage();
+        topPanel = new TopPanel(cardLayout, cardPanel, user);
+        storePage = new StorePage(user, topPanel, itemList);
         contactPage = ContactPage.getInstance();
-        cartPage = CartPage.getInstance(user);
-        ordersPage = OrdersPage.getInstance(user);
+        cartPage = new CartPage(user, itemList);
+        ordersPage = new OrdersPage(user);
+        profilePage = new ProfilePage(user);
     }
 
     private void setLayout() {
@@ -78,6 +83,7 @@ public class MainGui extends JFrame{
         cardPanel.add(contactPage, "contactPage");
         cardPanel.add(cartPage, "cartPage");
         cardPanel.add(ordersPage, "ordersPage");
+        cardPanel.add(profilePage, "profilePage");
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(cardPanel, BorderLayout.CENTER);
         add(mainPanel);
@@ -85,7 +91,6 @@ public class MainGui extends JFrame{
 
     public void autheticationSuccessful() {
         isAuthenticated = true;
-        user = loginPage.getUser();
         loadGui();
         setVisible(true);
     }
@@ -103,6 +108,15 @@ public class MainGui extends JFrame{
         topPanel.getViewOrders().addActionListener(e -> {
             ordersPage.loadOrders();
         });
+
+        topPanel.getLogOut().addActionListener(e -> {
+            logOut();
+        });
+    }
+
+    private void logOut() {
+        dispose();
+        parent.setVisible(true);
     }
 
     /*
@@ -111,8 +125,5 @@ public class MainGui extends JFrame{
      */
     
 
-    public static void main(String[] args) {
-        new MainGui();
-    }
     
 }
