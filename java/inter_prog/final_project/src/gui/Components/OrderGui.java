@@ -28,8 +28,7 @@ public class OrderGui extends JPanel{
 
     private JLabel orderNumberLabel,
                     currentDate,
-                    statusLabel,
-                    totalLabel;
+                    statusLabel;
 
     private JButton viewOrderButton;
 
