@@ -38,7 +38,7 @@ public class OrdersPage extends JPanel{
 
     private PersonClass user;
 
-    private OrdersPage(PersonClass user) {
+    public OrdersPage(PersonClass user) {
         this.user = user;
         this.orders = user.orderList;
         setVisible(true);

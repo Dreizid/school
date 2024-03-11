@@ -2,6 +2,7 @@ package gui.Pages;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.MaskFormatter;
 
 import core.PersonClass;
 
@@ -47,7 +48,7 @@ public class ProfilePage extends JPanel {
 
     protected PersonClass user;
 
-    protected ProfilePage(PersonClass user) {
+    public ProfilePage(PersonClass user) {
         this.user = user;
         initComponents();
         setLayout();
@@ -72,11 +73,8 @@ public class ProfilePage extends JPanel {
         emailAddressField.setText(user.getEmail());
         addressField = new JTextField(10);
 
-        numberField = new JFormattedTextField();
-        numberField.setColumns(15);
-        numberField.setText(user.getNumber());
-
-        fullNameField = new JTextField();
+        fullNameField = new JTextField(15);
+        System.out.println(user.getFullName());
         fullNameField.setText(user.getFullName());
 
         applyChangesButton = new JButton("Apply changes");
@@ -101,6 +99,15 @@ public class ProfilePage extends JPanel {
         Font font = new Font("Open Sans MS", Font.PLAIN, 30);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+
+        try {
+            MaskFormatter formatter = new MaskFormatter("+## ###-###-####");
+            formatter.setPlaceholder(user.getNumber());
+            numberField = new JFormattedTextField(formatter);
+            numberField.setColumns(15);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
 
         fullNameField.setEditable(false);
         usernameField.setEditable(false);
@@ -135,23 +142,25 @@ public class ProfilePage extends JPanel {
         gbc.insets = new Insets(30, 30, 30, 30);
         gbc.gridy = 0;
         gbc.gridx = 0;
-        TitledBorder titledBorder = BorderFactory.createTitledBorder("Username");
-        titledBorder.setTitleFont(new Font("Open Sans MS", Font.PLAIN, 18));
+        TitledBorder titledUsernameBorder = BorderFactory.createTitledBorder("Username");
+        titledUsernameBorder.setTitleFont(new Font("Open Sans MS", Font.PLAIN, 18));
         fieldsPanel.setLayout(new GridBagLayout());
         fieldsPanel.add(usernameField, gbc);
-        usernameField.setBorder(titledBorder);
+        usernameField.setBorder(titledUsernameBorder);
         usernameField.setFont(font);
         gbc.gridx = 1;
         fieldsPanel.add(emailAddressField, gbc);
-        titledBorder.setTitle("Email");
-        emailAddressField.setBorder(titledBorder);
+        TitledBorder titledEmailBorder = BorderFactory.createTitledBorder("Email");
+        titledEmailBorder.setTitleFont(new Font("Open Sans MS", Font.PLAIN, 18));
+        emailAddressField.setBorder(titledEmailBorder);
         emailAddressField.setFont(font);
         gbc.gridx = 0;
         gbc.gridy = 1;
         fieldsPanel.add(numberField, gbc);
-        titledBorder.setTitle("Phone number");
+        TitledBorder titledNumberBorder = BorderFactory.createTitledBorder("Phone number");
+        titledNumberBorder.setTitleFont(new Font("Open Sans MS", Font.PLAIN, 18));
         numberField.setFont(font);
-        numberField.setBorder(titledBorder);
+        numberField.setBorder(titledNumberBorder);
         gbc.gridy++;
         gbc.gridwidth = 2;
         gbc.weightx = 1;

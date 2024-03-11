@@ -21,6 +21,7 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
     private static final Color SELECTED_PAGE_COLOR = new Color(0, 100, 0); // 34, 139, 34
     private static final Color BACKGROUND_COLOR = new Color(224, 227, 213);
 
+    
     private static final ImageIcon TOP_LOGO = new ImageIcon("src\\gui\\static\\images\\logo.png");
     private static final ImageIcon CART_ICON = new ImageIcon("src\\gui\\static\\images\\cart.png");
     private static final ImageIcon CART_SELECTED_ICON = new ImageIcon("src\\gui\\static\\images\\cartopen.png");
@@ -56,7 +57,7 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
 
     private PersonClass user;
 
-    private TopPanel(CardLayout card, JPanel panel, PersonClass user) {
+    public TopPanel(CardLayout card, JPanel panel, PersonClass user) {
         this.cardLayout = card;
         this.parentPanel = panel;
         this.user = user;
@@ -143,9 +144,10 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
         add(searchPanel);
         add(Box.createHorizontalStrut(45));
 
+        
         cartButton.setIcon(CART_ICON);
         cartButton.setBadgeColor(new Color(200, 100, 100));
-        cartButton.setText("0");
+        cartButton.setText(String.valueOf(user.cart.getSize()));
         // cartButton.setBorder(BorderFactory.createEmptyBorder(15, 13, 10, 11));
         add(cartButton);
         add(Box.createHorizontalStrut(25));
@@ -302,6 +304,8 @@ public class TopPanel extends JPanel implements CartListener, HomeListener{
         JLabel text = new JLabel("Balance: ");
         text.setBackground(Color.WHITE);
         balanceField = new JTextField("₱ " + String.format("%.2f", this.user.getWallet().getBalance()));
+        balanceField.setBackground(Color.WHITE);
+        balanceField.setBorder(BorderFactory.createEmptyBorder());
         balanceField.setEditable(false); 
         panel.add(text);
         panel.add(balanceField);

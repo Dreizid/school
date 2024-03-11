@@ -3,15 +3,21 @@ package gui.Pages;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 
+import core.PersonClass;
+import core.Users;
 import gui.widgets.RoundJButton;
 
 import java.awt.*;
 
 public class RegistrationPage extends JFrame{
     private static RegistrationPage instance;
+
+    protected JFormattedTextField nameField,
+                                phoneField;
     
-    private RegistrationPage() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    public RegistrationPage() {
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setResizable(false);
         setLocationRelativeTo(null);
         setSize(1048, 550);
         setLayout(new BorderLayout());
@@ -67,9 +73,8 @@ public class RegistrationPage extends JFrame{
 
         // Name field
         JLabel nameLabel = new JLabel("Name");
-        JFormattedTextField nameField = null;
         try {
-            MaskFormatter formatter = new MaskFormatter(repeatCharacter('*', 70));
+            MaskFormatter formatter = new MaskFormatter(repeatCharacter('*', 61));
             formatter.setValidCharacters(".- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
             nameField = new JFormattedTextField(formatter);
         } catch (java.text.ParseException e) {
@@ -94,7 +99,6 @@ public class RegistrationPage extends JFrame{
          * turn black when focus in / when replacing the placeholder text
          */
         JLabel phoneLabel = new JLabel("Phone number");
-        JFormattedTextField phoneField = null;
         try {
             MaskFormatter formatter = new MaskFormatter("+## ###-###-####");
             formatter.setPlaceholder("+63 012-345-6789");
@@ -128,14 +132,19 @@ public class RegistrationPage extends JFrame{
         // Buttons
         RoundJButton signUpButton = new RoundJButton("Sign up", 20, Color.GREEN);
         signUpButton.addActionListener(e -> {
-            setVisible(false);
+            if (passwordField.getText().equals(confirmPasswordField.getText())) {
+                Users.users.add(new PersonClass(usernameField.getText(), nameField.getText().trim(), emailField.getText(), passwordField.getText(), phoneField.getText()));
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Password's don't match", "Error", JOptionPane.WARNING_MESSAGE);
+            }
         });
         signUpButton.setBackground(Color.GREEN);
         labelgbc.gridy += 2;
         leftPanel.add(signUpButton, labelgbc);
         RoundJButton backButton = new RoundJButton("Back", 20, Color.GRAY);
         backButton.addActionListener(e -> {
-            setVisible(false);
+            dispose();
         });
         backButton.setBackground(Color.GRAY);
         labelgbc.anchor = GridBagConstraints.EAST;

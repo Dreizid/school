@@ -34,7 +34,7 @@ public class HomePage extends JPanel{
 
     private JLabel backgroundPanel;
 
-    private HomePage() {
+    public HomePage() {
         /*
          * TO DO:
          * Add text to the background image - DONE

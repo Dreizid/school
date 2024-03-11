@@ -59,7 +59,7 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
     CardLayout cardLayout;
     PersonClass user;
     
-    private StorePage(PersonClass user, TopPanel topPanel, Items item) {
+    public StorePage(PersonClass user, TopPanel topPanel, Items item) {
         this.user = user;
         this.topPanel = topPanel;
         this.itemList = item;
@@ -242,6 +242,7 @@ public class StorePage extends JPanel implements TopListener, HomeListener{
     private void searchItem(String item) {
         itemsPanel.removeAll();
         ItemClass searchedItem = Items.loweredItems.get(item.toLowerCase());
+        System.out.println(searchedItem.getName());
         ShopItem itemGui = new ShopItem(searchedItem, user, itemList);
         itemGui.setUser(user);
         itemGui.setTopPanel(topPanel);

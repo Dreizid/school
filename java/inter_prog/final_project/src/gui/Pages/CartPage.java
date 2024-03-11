@@ -78,7 +78,7 @@ public class CartPage extends JPanel implements CartItemListener{
 
     protected Items itemList;
 
-    private CartPage(PersonClass user, Items itemList) {
+    public CartPage(PersonClass user, Items itemList) {
         this.user = user;
         this.itemList = itemList;
         initComponents();
@@ -224,23 +224,31 @@ public class CartPage extends JPanel implements CartItemListener{
         purchaseButton.addActionListener(e -> {
             calculateFinalPrice();
             if (totalValue > user.getWallet().getBalance()) {
-
+                JOptionPane.showMessageDialog(null, "Insufficient balance", "Error", JOptionPane.ERROR_MESSAGE);
             } else if (user.cart.cart.size() > 0){
-                if (listener != null) {
-                    listener.purchaseEvent();
+
+                int confirmationResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to purchase " + user.cart.getAmount() + " items " + "for ₱ " + String.format("%.2f", totalValue));
+                if (confirmationResult == JOptionPane.YES_OPTION) {
+                    if (listener != null) {
+                        listener.purchaseEvent();
+                    }
+    
+                    Order order = new Order(user.orderList.getOrderAmount(), currentCoupon, discountPrice, totalValue, serviceFee, user.cart);
+                    currentCoupon = "";
+                    discountPer = 0.00;
+                    recalculateValues();
+                    user.getWallet().subtractBalance(totalValue);
+                    user.orderList.addOrder(order);
+                    user.createNewCart();
+                    addedItems.clear();
+                    itemsPanel.removeAll();
+                    itemsPanel.repaint();
+                    itemsPanel.revalidate();
+                    reloadPage();
+                    JOptionPane.showMessageDialog(null , "Succesfully purchased!", "Thank you for buying!", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+
                 }
-                Order order = new Order(user.orderList.getOrderAmount(), currentCoupon, discountPrice, totalValue, serviceFee, user.cart);
-                recalculateValues();
-                currentCoupon = "";
-                user.getWallet().subtractBalance(totalValue);
-                user.orderList.addOrder(order);
-                user.createNewCart();
-                addedItems.clear();
-                itemsPanel.removeAll();
-                itemsPanel.repaint();
-                itemsPanel.revalidate();
-                reloadPage();
-                JOptionPane.showMessageDialog(null , "Succesfully purchased!", "Thank you for buying!", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         applyCouponButton.addActionListener(e -> {
@@ -320,7 +328,7 @@ public class CartPage extends JPanel implements CartItemListener{
 
     private void calculateServiceFee() {
         if (user.cart.cart.size() != 0) {     
-            serviceFee = 70.00;
+            serviceFee = 25.00;
         } else {
             serviceFee = 0.00;
         }
